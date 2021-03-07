@@ -18,8 +18,8 @@ namespace JCMFitnessPostgresAPI
 
             using (var scope = host.Services.CreateScope())
             {
-                var db = scope.ServiceProvider.GetRequiredService<PostgreSqlContext>();
-                db.Database.EnsureCreated();
+                //var db = scope.ServiceProvider.GetRequiredService<PostgreSqlContext>();
+                //db.Database.EnsureCreated();
                 //db.Database.Migrate();
             }
 

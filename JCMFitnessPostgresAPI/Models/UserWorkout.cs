@@ -19,6 +19,6 @@ namespace JCMFitnessPostgresAPI.Models
         public virtual Workout Workout { get; set; }
 
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
-
+        public bool IsPublic { get; set; }
     }
 }
