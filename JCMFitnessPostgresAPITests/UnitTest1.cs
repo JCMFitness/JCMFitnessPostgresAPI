@@ -1,3 +1,4 @@
+using FluentAssertions;
 using JCMFitnessPostgresAPI.Models;
 using NUnit.Framework;
 
@@ -31,9 +32,17 @@ namespace JCMFitnessPostgresAPITests
                 IsPublic = true
             };
 
+            var userworkout3 = new UserWorkout
+            {
+                User = user1,
+                Workout = workout2,
+                IsPublic = true
+            };
+
+            user1.UserWorkouts.Count.Should().Be(2);
 
 
-            
+
         }
     }
 }
