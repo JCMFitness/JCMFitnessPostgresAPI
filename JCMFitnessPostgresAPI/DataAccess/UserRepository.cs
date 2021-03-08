@@ -51,10 +51,8 @@ namespace JCMFitnessPostgresAPI.DataAccess
  
         public async Task EditWorkoutAsync(Workout workout)
         {
-            
             _context.Update(workout);
             await _context.SaveChangesAsync();
-         
         }
 
         public async Task<Workout> GetWorkoutAsync(string workoutID)
@@ -93,7 +91,20 @@ namespace JCMFitnessPostgresAPI.DataAccess
 
         }
 
+        public async Task<IEnumerable<Workout>> GetUserWorkoutsAsync(string userID)
+        {
+            //var workoutList = await EntityFrameworkQueryableExtensions.ToListAsync(_context.Workouts);
+            //var userWorkoutList = await EntityFrameworkQueryableExtensions.ToListAsync(_context.UserWorkouts);
 
+            //var usersList = await EntityFrameworkQueryableExtensions.ToListAsync(_context.Users);
+
+            var userWorkouts = _context.Users
+                    .Where(m => m.UserID == userID)
+                    .SelectMany(m => m.UserWorkouts.Select(mc => mc.Workout))
+                    .ToList();
+
+            return userWorkouts;
+        }
 
         /*public void AddUser(User user)
         {

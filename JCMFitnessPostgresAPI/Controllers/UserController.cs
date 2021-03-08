@@ -20,10 +20,25 @@ namespace JCMFitnessPostgresAPI.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<User> GetAllUsers()
+        public async Task<IEnumerable<User>> GetAllUsers()
         {
-            return _userRepository.GetAllUsers();
+            return await _userRepository.GetUsersAsync();
         }
+
+        [HttpGet]
+        public async Task<IEnumerable<Workout>> GetAllWorkouts()
+        {
+            return await _userRepository.GetWorkoutListAsync();
+        }
+
+        [HttpGet]
+        public async Task<IEnumerable<Workout>> GetUserWorkouts(string userID)
+        {
+            var category = await _userRepository.GetUserWorkoutsAsync(userID);
+
+            return category;
+        }
+
 
         [HttpPost]
         public IActionResult AddUser([FromBody] User user)
@@ -32,16 +47,16 @@ namespace JCMFitnessPostgresAPI.Controllers
             {
                 //Guid obj = Guid.NewGuid();
                 //user.UserID = obj.ToString("n");
-                _userRepository.AddUser(user);
+                _userRepository.AddUserAsync(user);
                 return Ok();
             }
             return BadRequest();
         }
 
         [HttpGet("{id}")]
-        public User GetUserByID(string id)
+        public Task<User> GetUserByID(string id)
         {
-            return _userRepository.GetUserByID(id);
+            return _userRepository.GetUserAsync(id);
         }
 
         [HttpPut]
@@ -49,16 +64,16 @@ namespace JCMFitnessPostgresAPI.Controllers
         {
             if (ModelState.IsValid)
             {
-                _userRepository.UpdateUser(user);
+                _userRepository.EditUserAsync(user);
                 return Ok();
             }
             return BadRequest();
         }
 
-        [HttpDelete("{id}")]
+    /*    [HttpDelete("{id}")]
         public IActionResult DeleteUser(string id)
         {
-            var data = _userRepository.GetUserByID(id);
+            var data = _userRepository.(id);
 
             if (data == null)
             {
@@ -66,7 +81,7 @@ namespace JCMFitnessPostgresAPI.Controllers
             }
             _userRepository.DeleteUser(id);
             return Ok();
-        }
+        }*/
 /*
         [HttpGet("/workouts")]
         public List<Workout> GetWorkouts(string id)
