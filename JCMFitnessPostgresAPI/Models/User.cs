@@ -25,5 +25,8 @@ namespace JCMFitnessPostgresAPI.Models
 
         public DateTime JoinedDate { get; set; } = DateTime.UtcNow;
         public bool IsAdmin { get; set; }
+
+        public virtual List<UserWorkout> UserWorkouts { get; set; }
+
     }
 }

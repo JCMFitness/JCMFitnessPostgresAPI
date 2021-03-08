@@ -12,13 +12,11 @@ namespace JCMFitnessPostgresAPI.Models
         [Required]
         [Key]
         public string Id { get; set; }
-        public int UserID { get; set; }
-        public int WorkoutID { get; set; }
+        public string UserID { get; set; }
+        public User User { get; set; }
+        public string WorkoutID { get; set; }
 
-    
-        public virtual User User { get; set; }
-
-        public virtual Workout Workout { get; set; }
+        public Workout Workout { get; set; }
 
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
         public bool IsPublic { get; set; }

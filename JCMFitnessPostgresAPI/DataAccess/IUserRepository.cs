@@ -9,10 +9,19 @@ namespace JCMFitnessPostgresAPI.DataAccess
 {
     public interface IUserRepository
     {
-        void AddUser(User user);
-        void UpdateUser(User user);
-        void DeleteUser(string id);
-        User GetUserByID(string id);
-        List<User> GetAllUsers();
+        public Task<IEnumerable<Workout>> GetWorkoutListAsync();
+        public Task AddWorkoutAsync(Workout workout, string userID);
+        public Task<Workout> GetWorkoutAsync(string id);
+
+
+        public Task<IEnumerable<User>> GetUsersAsync();
+        public Task AddUserAsync(User User);
+        public Task<User> GetUserAsync(string id);
+
+
+        public Task EditWorkoutAsync(Workout workout);
+        public Task EditUserAsync(User user);
+
     }
+
 }

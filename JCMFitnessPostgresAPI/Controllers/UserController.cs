@@ -67,5 +67,14 @@ namespace JCMFitnessPostgresAPI.Controllers
             _userRepository.DeleteUser(id);
             return Ok();
         }
+/*
+        [HttpGet("/workouts")]
+        public List<Workout> GetWorkouts(string id)
+        {
+            var user = _userRepository.GetUserByID(id);
+
+           
+        }*/
+
     }
 }
