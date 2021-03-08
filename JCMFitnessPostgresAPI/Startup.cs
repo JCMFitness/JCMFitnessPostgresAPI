@@ -1,7 +1,9 @@
+using JCMFitnessPostgresAPI.DataAccess;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -29,10 +31,11 @@ namespace JCMFitnessPostgresAPI
 
             services.AddControllers();
 
-            var sqlConnectionString = Configuration["PostgreSqlConnectionString"];
+            //var sqlConnectionString = Configuration["PostgreSqlConnectionString"];
 
-            //services.AddDbContext<PostgreSqlContext>(options => options.UseNpgsql(convertUrlConnectionString(Configuration["DATABASE_URL"])));
+            services.AddDbContext<ApiDBContext>(options => options.UseNpgsql(convertUrlConnectionString(Configuration["DATABASE_URL"])));
 
+            services.AddScoped<IUserRepository, UserRepository>();
 
 
             services.AddSwaggerGen(c =>

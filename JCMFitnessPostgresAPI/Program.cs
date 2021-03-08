@@ -1,4 +1,6 @@
+using JCMFitnessPostgresAPI.DataAccess;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -18,9 +20,9 @@ namespace JCMFitnessPostgresAPI
 
             using (var scope = host.Services.CreateScope())
             {
-                //var db = scope.ServiceProvider.GetRequiredService<PostgreSqlContext>();
+                var db = scope.ServiceProvider.GetRequiredService<ApiDBContext>();
                 //db.Database.EnsureCreated();
-                //db.Database.Migrate();
+                db.Database.Migrate();
             }
 
             host.Run();
