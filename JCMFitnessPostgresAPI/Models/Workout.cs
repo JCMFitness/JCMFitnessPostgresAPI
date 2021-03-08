@@ -16,7 +16,5 @@ namespace JCMFitnessPostgresAPI.Models
         public string Category { get; set; }
         public bool IsPublic { get; set; }
 
-        public virtual ICollection<UserWorkout> UserWorkouts { get; set; }
-
     }
 }

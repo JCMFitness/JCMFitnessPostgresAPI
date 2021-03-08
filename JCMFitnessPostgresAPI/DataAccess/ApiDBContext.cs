@@ -19,9 +19,9 @@ namespace JCMFitnessPostgresAPI.DataAccess
         public DbSet<UserWorkout> UserWorkouts { get; set; }
 
 
-        protected override void OnModelCreating(ModelBuilder builder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(builder);
+            modelBuilder.Entity<UserWorkout>().HasKey(sc => new { sc.UserID, sc.WorkoutID });
         }
 
         public override int SaveChanges()

@@ -10,7 +10,7 @@ namespace JCMFitnessPostgresAPI.Models
     {
         [Required]
         [Key]
-        public string UserID { get; set; } = Guid.NewGuid().ToString("n");
+        public string UserID { get; set; }
 
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -25,7 +25,5 @@ namespace JCMFitnessPostgresAPI.Models
 
         public DateTime JoinedDate { get; set; } = DateTime.UtcNow;
         public bool IsAdmin { get; set; }
-
-        public virtual ICollection<UserWorkout> UserWorkouts { get; set; }
     }
 }
