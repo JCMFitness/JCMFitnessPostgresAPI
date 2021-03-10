@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace JCMFitnessPostgresAPI.Migrations
 {
     [DbContext(typeof(ApiDBContext))]
-    [Migration("20210308024526_Initial")]
-    partial class Initial
+    [Migration("20210310024857_Second")]
+    partial class Second
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -54,42 +54,32 @@ namespace JCMFitnessPostgresAPI.Migrations
 
             modelBuilder.Entity("JCMFitnessPostgresAPI.Models.UserWorkout", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<string>("UserID")
+                        .HasColumnType("text");
+
+                    b.Property<string>("WorkoutID")
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
                     b.Property<bool>("IsPublic")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("UserID")
-                        .HasColumnType("integer");
+                    b.HasKey("UserID", "WorkoutID");
 
-                    b.Property<string>("UserID1")
-                        .HasColumnType("text");
-
-                    b.Property<int>("WorkoutID")
-                        .HasColumnType("integer");
-
-                    b.Property<long?>("WorkoutID1")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserID1");
-
-                    b.HasIndex("WorkoutID1");
+                    b.HasIndex("WorkoutID");
 
                     b.ToTable("UserWorkouts");
                 });
 
             modelBuilder.Entity("JCMFitnessPostgresAPI.Models.Workout", b =>
                 {
-                    b.Property<long>("WorkoutID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                    b.Property<string>("WorkoutID")
+                        .HasColumnType("text");
 
                     b.Property<string>("Category")
                         .HasColumnType("text");
@@ -112,11 +102,15 @@ namespace JCMFitnessPostgresAPI.Migrations
                 {
                     b.HasOne("JCMFitnessPostgresAPI.Models.User", "User")
                         .WithMany("UserWorkouts")
-                        .HasForeignKey("UserID1");
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("JCMFitnessPostgresAPI.Models.Workout", "Workout")
                         .WithMany("UserWorkouts")
-                        .HasForeignKey("WorkoutID1");
+                        .HasForeignKey("WorkoutID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
 

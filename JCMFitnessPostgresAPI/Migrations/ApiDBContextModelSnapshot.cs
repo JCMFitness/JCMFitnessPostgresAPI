@@ -52,11 +52,11 @@ namespace JCMFitnessPostgresAPI.Migrations
 
             modelBuilder.Entity("JCMFitnessPostgresAPI.Models.UserWorkout", b =>
                 {
-                    b.Property<int>("UserID")
-                        .HasColumnType("integer");
+                    b.Property<string>("UserID")
+                        .HasColumnType("text");
 
-                    b.Property<int>("WorkoutID")
-                        .HasColumnType("integer");
+                    b.Property<string>("WorkoutID")
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp without time zone");
@@ -69,15 +69,15 @@ namespace JCMFitnessPostgresAPI.Migrations
 
                     b.HasKey("UserID", "WorkoutID");
 
+                    b.HasIndex("WorkoutID");
+
                     b.ToTable("UserWorkouts");
                 });
 
             modelBuilder.Entity("JCMFitnessPostgresAPI.Models.Workout", b =>
                 {
-                    b.Property<long>("WorkoutID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                    b.Property<string>("WorkoutID")
+                        .HasColumnType("text");
 
                     b.Property<string>("Category")
                         .HasColumnType("text");
@@ -94,6 +94,35 @@ namespace JCMFitnessPostgresAPI.Migrations
                     b.HasKey("WorkoutID");
 
                     b.ToTable("Workouts");
+                });
+
+            modelBuilder.Entity("JCMFitnessPostgresAPI.Models.UserWorkout", b =>
+                {
+                    b.HasOne("JCMFitnessPostgresAPI.Models.User", "User")
+                        .WithMany("UserWorkouts")
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JCMFitnessPostgresAPI.Models.Workout", "Workout")
+                        .WithMany("UserWorkouts")
+                        .HasForeignKey("WorkoutID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+
+                    b.Navigation("Workout");
+                });
+
+            modelBuilder.Entity("JCMFitnessPostgresAPI.Models.User", b =>
+                {
+                    b.Navigation("UserWorkouts");
+                });
+
+            modelBuilder.Entity("JCMFitnessPostgresAPI.Models.Workout", b =>
+                {
+                    b.Navigation("UserWorkouts");
                 });
 #pragma warning restore 612, 618
         }

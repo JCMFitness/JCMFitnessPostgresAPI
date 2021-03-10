@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace JCMFitnessPostgresAPI.Migrations
 {
@@ -30,8 +29,7 @@ namespace JCMFitnessPostgresAPI.Migrations
                 name: "Workouts",
                 columns: table => new
                 {
-                    WorkoutID = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    WorkoutID = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: true),
                     Description = table.Column<string>(type: "text", nullable: true),
                     Category = table.Column<string>(type: "text", nullable: true),
@@ -46,40 +44,33 @@ namespace JCMFitnessPostgresAPI.Migrations
                 name: "UserWorkouts",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    UserID = table.Column<int>(type: "integer", nullable: false),
-                    WorkoutID = table.Column<int>(type: "integer", nullable: false),
-                    UserID1 = table.Column<string>(type: "text", nullable: true),
-                    WorkoutID1 = table.Column<long>(type: "bigint", nullable: true),
+                    UserID = table.Column<string>(type: "text", nullable: false),
+                    WorkoutID = table.Column<string>(type: "text", nullable: false),
+                    Id = table.Column<string>(type: "text", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     IsPublic = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserWorkouts", x => x.Id);
+                    table.PrimaryKey("PK_UserWorkouts", x => new { x.UserID, x.WorkoutID });
                     table.ForeignKey(
-                        name: "FK_UserWorkouts_Users_UserID1",
-                        column: x => x.UserID1,
+                        name: "FK_UserWorkouts_Users_UserID",
+                        column: x => x.UserID,
                         principalTable: "Users",
                         principalColumn: "UserID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserWorkouts_Workouts_WorkoutID1",
-                        column: x => x.WorkoutID1,
+                        name: "FK_UserWorkouts_Workouts_WorkoutID",
+                        column: x => x.WorkoutID,
                         principalTable: "Workouts",
                         principalColumn: "WorkoutID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserWorkouts_UserID1",
+                name: "IX_UserWorkouts_WorkoutID",
                 table: "UserWorkouts",
-                column: "UserID1");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserWorkouts_WorkoutID1",
-                table: "UserWorkouts",
-                column: "WorkoutID1");
+                column: "WorkoutID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

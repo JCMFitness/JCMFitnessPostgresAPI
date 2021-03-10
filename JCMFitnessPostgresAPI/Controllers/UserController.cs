@@ -12,31 +12,17 @@ namespace JCMFitnessPostgresAPI.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IDataRepository _dataRepository;
 
-        public UserController(IUserRepository userRepository)
+        public UserController(IDataRepository userRepository)
         {
-            _userRepository = userRepository;
+            _dataRepository = userRepository;
         }
 
         [HttpGet]
         public async Task<IEnumerable<User>> GetAllUsers()
         {
-            return await _userRepository.GetUsersAsync();
-        }
-
-        [HttpGet]
-        public async Task<IEnumerable<Workout>> GetAllWorkouts()
-        {
-            return await _userRepository.GetWorkoutListAsync();
-        }
-
-        [HttpGet]
-        public async Task<IEnumerable<Workout>> GetUserWorkouts(string userID)
-        {
-            var category = await _userRepository.GetUserWorkoutsAsync(userID);
-
-            return category;
+            return await _dataRepository.GetUsersAsync();
         }
 
 
@@ -47,7 +33,7 @@ namespace JCMFitnessPostgresAPI.Controllers
             {
                 //Guid obj = Guid.NewGuid();
                 //user.UserID = obj.ToString("n");
-                _userRepository.AddUserAsync(user);
+                _dataRepository.AddUserAsync(user);
                 return Ok();
             }
             return BadRequest();
@@ -56,7 +42,7 @@ namespace JCMFitnessPostgresAPI.Controllers
         [HttpGet("{id}")]
         public Task<User> GetUserByID(string id)
         {
-            return _userRepository.GetUserAsync(id);
+            return _dataRepository.GetUserAsync(id);
         }
 
         [HttpPut]
@@ -64,32 +50,10 @@ namespace JCMFitnessPostgresAPI.Controllers
         {
             if (ModelState.IsValid)
             {
-                _userRepository.EditUserAsync(user);
+                _dataRepository.EditUserAsync(user);
                 return Ok();
             }
             return BadRequest();
         }
-
-    /*    [HttpDelete("{id}")]
-        public IActionResult DeleteUser(string id)
-        {
-            var data = _userRepository.(id);
-
-            if (data == null)
-            {
-                return NotFound();
-            }
-            _userRepository.DeleteUser(id);
-            return Ok();
-        }*/
-/*
-        [HttpGet("/workouts")]
-        public List<Workout> GetWorkouts(string id)
-        {
-            var user = _userRepository.GetUserByID(id);
-
-           
-        }*/
-
     }
 }

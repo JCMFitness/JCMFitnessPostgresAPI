@@ -14,109 +14,119 @@ namespace JCMFitnessPostgresAPI.Controllers
     [ApiController]
     public class UserWorkoutsController : ControllerBase
     {
-        private readonly ApiDBContext _context;
+        private readonly IDataRepository _dataRepository;
 
-        public UserWorkoutsController(ApiDBContext context)
+        public UserWorkoutsController(IDataRepository userRepository)
         {
-            _context = context;
+            _dataRepository = userRepository;
         }
 
-        // GET: api/UserWorkouts
+
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserWorkout>>> GetUserWorkouts()
+        public async Task<IEnumerable<Workout>> GetUserWorkouts(string userID)
         {
-            return await _context.UserWorkouts.ToListAsync();
+            var category = await _dataRepository.GetUserWorkoutsAsync(userID);
+
+            return category;
         }
 
-        // GET: api/UserWorkouts/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<UserWorkout>> GetUserWorkout(int id)
-        {
-            var userWorkout = await _context.UserWorkouts.FindAsync(id);
 
-            if (userWorkout == null)
-            {
-                return NotFound();
-            }
+        /* // GET: api/UserWorkouts
+         [HttpGet]
+         public async Task<ActionResult<IEnumerable<UserWorkout>>> GetUserWorkouts()
+         {
+             return await _context.UserWorkouts.ToListAsync();
+         }
 
-            return userWorkout;
-        }
+         // GET: api/UserWorkouts/5
+         [HttpGet("{id}")]
+         public async Task<ActionResult<UserWorkout>> GetUserWorkout(int id)
+         {
+             var userWorkout = await _context.UserWorkouts.FindAsync(id);
 
-        // PUT: api/UserWorkouts/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUserWorkout(int id, UserWorkout userWorkout)
-        {
-            if (id != userWorkout.UserID)
-            {
-                return BadRequest();
-            }
+             if (userWorkout == null)
+             {
+                 return NotFound();
+             }
 
-            _context.Entry(userWorkout).State = EntityState.Modified;
+             return userWorkout;
+         }
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserWorkoutExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+         // PUT: api/UserWorkouts/5
+         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+         [HttpPut("{id}")]
+         public async Task<IActionResult> PutUserWorkout(int id, UserWorkout userWorkout)
+         {
+             if (id != userWorkout.UserID)
+             {
+                 return BadRequest();
+             }
 
-            return NoContent();
-        }
+             _context.Entry(userWorkout).State = EntityState.Modified;
 
-        // POST: api/UserWorkouts
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<UserWorkout>> PostUserWorkout(UserWorkout userWorkout)
-        {
-            _context.UserWorkouts.Add(userWorkout);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (UserWorkoutExists(userWorkout.UserID))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+             try
+             {
+                 await _context.SaveChangesAsync();
+             }
+             catch (DbUpdateConcurrencyException)
+             {
+                 if (!UserWorkoutExists(id))
+                 {
+                     return NotFound();
+                 }
+                 else
+                 {
+                     throw;
+                 }
+             }
 
-            return CreatedAtAction("GetUserWorkout", new { id = userWorkout.UserID }, userWorkout);
-        }
+             return NoContent();
+         }
 
-        // DELETE: api/UserWorkouts/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUserWorkout(int id)
-        {
-            var userWorkout = await _context.UserWorkouts.FindAsync(id);
-            if (userWorkout == null)
-            {
-                return NotFound();
-            }
+         // POST: api/UserWorkouts
+         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+         [HttpPost]
+         public async Task<ActionResult<UserWorkout>> PostUserWorkout(UserWorkout userWorkout)
+         {
+             _context.UserWorkouts.Add(userWorkout);
+             try
+             {
+                 await _context.SaveChangesAsync();
+             }
+             catch (DbUpdateException)
+             {
+                 if (UserWorkoutExists(userWorkout.UserID))
+                 {
+                     return Conflict();
+                 }
+                 else
+                 {
+                     throw;
+                 }
+             }
 
-            _context.UserWorkouts.Remove(userWorkout);
-            await _context.SaveChangesAsync();
+             return CreatedAtAction("GetUserWorkout", new { id = userWorkout.UserID }, userWorkout);
+         }
 
-            return NoContent();
-        }
+         // DELETE: api/UserWorkouts/5
+         [HttpDelete("{id}")]
+         public async Task<IActionResult> DeleteUserWorkout(int id)
+         {
+             var userWorkout = await _context.UserWorkouts.FindAsync(id);
+             if (userWorkout == null)
+             {
+                 return NotFound();
+             }
 
-        private bool UserWorkoutExists(int id)
-        {
-            return _context.UserWorkouts.Any(e => e.UserID == id);
-        }
+             _context.UserWorkouts.Remove(userWorkout);
+             await _context.SaveChangesAsync();
+
+             return NoContent();
+         }
+
+         private bool UserWorkoutExists(int id)
+         {
+             return _context.UserWorkouts.Any(e => e.UserID == id);
+         }*/
     }
 }

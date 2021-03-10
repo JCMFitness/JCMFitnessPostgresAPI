@@ -23,7 +23,7 @@ namespace JCMFitnessPostgresAPI.DataAccess
         {
             modelBuilder.Entity<UserWorkout>()
                 .HasKey(t => new { t.UserID, t.WorkoutID });
-
+/*
             modelBuilder.Entity<UserWorkout>()
                 .HasOne(pt => pt.Workout)
                 .WithMany(p => p.UserWorkouts)
@@ -32,7 +32,7 @@ namespace JCMFitnessPostgresAPI.DataAccess
             modelBuilder.Entity<UserWorkout>()
                 .HasOne(pt => pt.User)
                 .WithMany(t => t.UserWorkouts)
-                .HasForeignKey(pt => pt.UserID);
+                .HasForeignKey(pt => pt.UserID);*/
         }
 
         public override int SaveChanges()
