@@ -27,35 +27,34 @@ namespace JCMFitnessPostgresAPI.Controllers
             return await _dataRepository.GetWorkoutListAsync();
         }
 
-
         [HttpPost]
-        public IActionResult AddWorkout([FromBody] Workout workout, string userID)
+        public async Task<IActionResult> AddUser([FromBody] Workout workout)
         {
             if (ModelState.IsValid)
             {
                 //Guid obj = Guid.NewGuid();
                 //user.UserID = obj.ToString("n");
-                _dataRepository.AddWorkoutAsync(workout, userID);
+                await _dataRepository.AddWorkoutAsync(workout);
                 return Ok();
             }
             return BadRequest();
         }
 
         [HttpPut]
-        public IActionResult EditWorkout([FromBody] Workout workout)
+        public  async Task<IActionResult> EditWorkout([FromBody] Workout workout)
         {
             if (ModelState.IsValid)
             {
-                _dataRepository.EditWorkoutAsync(workout);
+                await _dataRepository.EditWorkoutAsync(workout);
                 return Ok();
             }
             return BadRequest();
         }
 
         [HttpGet("{id}")]
-        public Task<Workout> GetWorkoutByID(string workoutID)
+        public async Task<Workout> GetWorkoutByID(string workoutID)
         {
-            return _dataRepository.GetWorkoutAsync(workoutID);
+            return await _dataRepository.GetWorkoutAsync(workoutID);
         }
 
         /* // GET: api/Workouts

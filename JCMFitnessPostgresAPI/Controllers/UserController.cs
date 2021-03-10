@@ -27,30 +27,30 @@ namespace JCMFitnessPostgresAPI.Controllers
 
 
         [HttpPost]
-        public IActionResult AddUser([FromBody] User user)
+        public async Task<IActionResult> AddUser([FromBody] User user)
         {
             if (ModelState.IsValid)
             {
                 //Guid obj = Guid.NewGuid();
                 //user.UserID = obj.ToString("n");
-                _dataRepository.AddUserAsync(user);
+                await _dataRepository.AddUserAsync(user);
                 return Ok();
             }
             return BadRequest();
         }
 
         [HttpGet("{id}")]
-        public Task<User> GetUserByID(string id)
+        public async Task<User> GetUserByID(string id)
         {
-            return _dataRepository.GetUserAsync(id);
+            return await _dataRepository.GetUserAsync(id);
         }
 
         [HttpPut]
-        public IActionResult UpdateUser([FromBody] User user)
+        public async  Task<IActionResult> UpdateUser([FromBody] User user)
         {
             if (ModelState.IsValid)
             {
-                _dataRepository.EditUserAsync(user);
+                await _dataRepository.EditUserAsync(user);
                 return Ok();
             }
             return BadRequest();

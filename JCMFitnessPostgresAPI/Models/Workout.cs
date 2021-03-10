@@ -8,12 +8,6 @@ namespace JCMFitnessPostgresAPI.Models
 {
     public class Workout
     {
-        public Workout()
-        {
-            UserWorkouts = new List<UserWorkout>();
-        }
-
-        [Required]
         [Key]
         public string WorkoutID { get; set; }
         public string Name { get; set; }
@@ -21,7 +15,7 @@ namespace JCMFitnessPostgresAPI.Models
         public string Category { get; set; }
         public bool IsPublic { get; set; }
 
-        public virtual List<UserWorkout> UserWorkouts { get; set; }
+        public List<UserWorkout> UserWorkouts { get; set; }
 
     }
 }

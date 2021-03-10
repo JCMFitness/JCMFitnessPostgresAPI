@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace JCMFitnessPostgresAPI.Migrations
 {
     [DbContext(typeof(ApiDBContext))]
-    [Migration("20210310024857_Second")]
+    [Migration("20210310174902_Second")]
     partial class Second
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

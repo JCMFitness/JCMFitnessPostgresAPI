@@ -14,7 +14,7 @@ namespace JCMFitnessPostgresAPI.DataAccess
 
         public DataRepository(ApiDBContext context)
         {
-            _context = context;
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         //Workout*******************************
@@ -25,32 +25,14 @@ namespace JCMFitnessPostgresAPI.DataAccess
 
         }
 
-        public async Task AddWorkoutAsync(Workout workout, string userID)
+        public async Task AddWorkoutAsync(Workout workout)
         {
 
-            var tempWorkout = await EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(_context.Workouts, c => c.WorkoutID == workout.WorkoutID);
-
-
-            if (tempWorkout == null)
-            {
-                tempWorkout = new Workout { 
-                    WorkoutID = workout.WorkoutID, Name = workout.Name, Description = workout.Description, Category = workout.Category, IsPublic = workout.IsPublic };
-                _context.Workouts.Add(tempWorkout);
-                await _context.SaveChangesAsync();
-            }
-
-            var newUserWorkout = new UserWorkout()
-            {
-                WorkoutID = tempWorkout.WorkoutID,
-                UserID = userID
-            };
-
-            _context.UserWorkouts.Add(newUserWorkout);
+            _context.Workouts.Add(workout);
             await _context.SaveChangesAsync();
-
         }
 
- 
+
         public async Task EditWorkoutAsync(Workout workout)
         {
             _context.Update(workout);
@@ -60,8 +42,6 @@ namespace JCMFitnessPostgresAPI.DataAccess
         public async Task<Workout> GetWorkoutAsync(string workoutID)
         {
             return await _context.Workouts
-                .Include(p => p.UserWorkouts)
-                .ThenInclude(pc => pc.User)
                 .FirstOrDefaultAsync(r => r.WorkoutID == workoutID);
         }
 
@@ -70,8 +50,6 @@ namespace JCMFitnessPostgresAPI.DataAccess
         public async Task<User> GetUserAsync(string userID)
         {
             return await Task.Run(() => _context.Users
-            .Include(c => c.UserWorkouts)
-            .ThenInclude(pc => pc.Workout)
             .First(r => r.UserID == userID));
         }
 
@@ -84,7 +62,7 @@ namespace JCMFitnessPostgresAPI.DataAccess
 
         public async Task<IEnumerable<User>> GetUsersAsync()
         {
-            return await _context.Users.Include(c => c.UserWorkouts).ThenInclude(r => r.Workout).ToListAsync();
+            return await _context.Users.ToListAsync();
         }
 
         public async Task EditUserAsync(User user)
@@ -97,6 +75,39 @@ namespace JCMFitnessPostgresAPI.DataAccess
 
 
         //UserWorkout*******************************
+
+        public async Task<IEnumerable<UserWorkout>> GetUserWorkoutsListAsync()
+        {
+            return await _context.UserWorkouts.ToListAsync();
+        }
+
+        public async Task AddUserWorkoutAsync(string workoutID, string userID)
+        {
+
+            var user = await EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(_context.Users, c => c.UserID == userID);
+            var workout = await EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(_context.Workouts, c => c.WorkoutID == workoutID);
+
+            //var workouts = await EntityFrameworkQueryableExtensions.ToListAsync(_context.Workouts);
+
+            //var workout = workouts.FirstOrDefault(c => c.WorkoutID == workoutID);
+         
+
+            var newUserWorkout = new UserWorkout()
+            {
+                Id = Guid.NewGuid().ToString("n"),
+                WorkoutID = workout.WorkoutID,
+                UserID = userID,
+                Workout = workout,
+                User = user,
+                IsPublic = true,
+            };
+
+            _context.UserWorkouts.Add(newUserWorkout);
+            await _context.SaveChangesAsync();
+
+        }
+
+
         public async Task<IEnumerable<Workout>> GetUserWorkoutsAsync(string userID)
         {
             //var workoutList = await EntityFrameworkQueryableExtensions.ToListAsync(_context.Workouts);
@@ -104,12 +115,17 @@ namespace JCMFitnessPostgresAPI.DataAccess
 
             //var usersList = await EntityFrameworkQueryableExtensions.ToListAsync(_context.Users);
 
-            var userWorkouts = _context.Users
+            /*var userWorkouts = _context.UserWorkouts
                     .Where(m => m.UserID == userID)
-                    .SelectMany(m => m.UserWorkouts.Select(mc => mc.Workout))
+                    .SelectMany(m => m.WorkoutID)
                     .ToList();
 
-            return userWorkouts;
+            return userWorkouts;*/
+
+            return await Task.Run(() => _context.UserWorkouts
+                    .Where(m => m.UserID == userID)
+                    .Select(m => m.Workout)
+                    .ToList());
         }
     }
 }

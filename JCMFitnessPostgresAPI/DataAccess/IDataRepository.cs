@@ -11,7 +11,7 @@ namespace JCMFitnessPostgresAPI.DataAccess
     {
         //Workout
         public Task<IEnumerable<Workout>> GetWorkoutListAsync();
-        public Task AddWorkoutAsync(Workout workout, string userID);
+        public Task AddWorkoutAsync(Workout workout);
         public Task<Workout> GetWorkoutAsync(string id);
         public Task EditWorkoutAsync(Workout workout);
 
@@ -23,6 +23,8 @@ namespace JCMFitnessPostgresAPI.DataAccess
 
 
         //UserWorkout
+        public Task<IEnumerable<UserWorkout>> GetUserWorkoutsListAsync();
+        public Task AddUserWorkoutAsync(string workoutID, string userID);
         public Task<IEnumerable<Workout>> GetUserWorkoutsAsync(string userID);
 
     }
