@@ -45,6 +45,15 @@ namespace JCMFitnessPostgresAPI.DataAccess
                 .FirstOrDefaultAsync(r => r.WorkoutID == workoutID);
         }
 
+        public async Task DeleteWorkoutAsync(string workoutID)
+        {
+            var workout = await _context.Workouts.FindAsync(workoutID);
+
+            _context.Workouts.Remove(workout);
+            await _context.SaveChangesAsync();
+        }
+
+
 
         //User *******************************
         public async Task<User> GetUserAsync(string userID)
@@ -73,6 +82,14 @@ namespace JCMFitnessPostgresAPI.DataAccess
 
         }
 
+
+        public async Task DeleteUserAsync(string userID)
+        {
+            var user = await _context.Users.FindAsync(userID);
+
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+        }
 
         //UserWorkout*******************************
 
@@ -126,6 +143,28 @@ namespace JCMFitnessPostgresAPI.DataAccess
                     .Where(m => m.UserID == userID)
                     .Select(m => m.Workout)
                     .ToList());
+        }
+
+        public async Task DeleteUserWorkoutAsync(string workoutID, string userID)
+        {
+
+            //var workout = _context.UserWorkouts.Where(m => m.UserID == userID).Where(m => m.WorkoutID == workoutID).Select(m => m.Workout);
+
+            var userWorkout = _context.UserWorkouts.Where(m => m.UserID == userID).Where(m => m.WorkoutID == workoutID);
+
+            _context.UserWorkouts.Remove((UserWorkout)userWorkout);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteUserWorkoutListAsync(string userID)
+        {
+
+            var userWorkout = _context.UserWorkouts.Where(m => m.UserID == userID);
+
+            _context.UserWorkouts.Remove((UserWorkout)userWorkout);
+
+            await _context.SaveChangesAsync();
         }
     }
 }
