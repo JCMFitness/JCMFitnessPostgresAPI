@@ -58,23 +58,12 @@ namespace JCMFitnessPostgresAPI.Controllers
 
         // DELETE: api/Users/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(long id)
+        public async Task<IActionResult> DeleteUser(string userID)
         {
-            var workout = await _dataRepositoryr.FindAsync(id);
-            if (workout == null)
-            {
-                return NotFound();
-            }
+            await _dataRepository.DeleteUserAsync(userID);
+          
 
-            _dataRepository.Workouts.Remove(workout);
-            await _dataRepository.SaveChangesAsync();
-
-            return NoContent();
+            return Ok();
         }
-
-        private bool WorkoutExists(long id)
-        {
-            return _dataRepository.Workouts.Any(e => e.WorkoutID == id);
-        }*/
     }
 }

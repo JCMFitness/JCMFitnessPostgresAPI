@@ -57,6 +57,17 @@ namespace JCMFitnessPostgresAPI.Controllers
             return await _dataRepository.GetWorkoutAsync(workoutID);
         }
 
+
+        // DELETE: api/Workouts/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteWorkout(string workoutID)
+        {
+            await _dataRepository.DeleteWorkoutAsync(workoutID);
+
+
+            return Ok();
+        }
+
         /* // GET: api/Workouts
          [HttpGet]
          public async Task<ActionResult<IEnumerable<Workout>>> GetWorkouts()
