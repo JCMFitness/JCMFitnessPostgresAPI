@@ -33,7 +33,7 @@ namespace JCMFitnessPostgresAPI
 
             //var sqlConnectionString = Configuration["PostgreSqlConnectionString"];
 
-            services.AddDbContext<ApiDBContext>(options => options.UseNpgsql(convertUrlConnectionString(Configuration["DATABASE_URL"])));
+            services.AddDbContext<ApiDBContext>(options => options.UseNpgsql(convertUrlConnectionString(Configuration["SalesDBContext"])));
 
             services.AddScoped<IDataRepository, DataRepository>();
 
