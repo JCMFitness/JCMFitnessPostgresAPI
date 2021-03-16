@@ -33,7 +33,7 @@ namespace JCMFitnessPostgresAPI
 
             //var sqlConnectionString = Configuration["PostgreSqlConnectionString"];
 
-            services.AddDbContext<ApiDBContext>(options => options.UseNpgsql(convertUrlConnectionString(Configuration["SalesDBContext"])));
+            services.AddDbContext<ApiDBContext>(options => options.UseNpgsql(convertUrlConnectionString(Configuration["HEROKU_DATABASE_URL"])));
 
             services.AddScoped<IDataRepository, DataRepository>();
 
