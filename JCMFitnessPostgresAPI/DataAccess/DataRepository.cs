@@ -67,6 +67,33 @@ namespace JCMFitnessPostgresAPI.DataAccess
 
 
         //User *******************************
+        public async Task<User> LoginUserAsync(string userName, string password)
+        {
+            /* return await _context.Users.Include(r => r.UserWorkouts)
+                .Include(p => p.UserWorkouts)
+                .ThenInclude(pc => pc.)
+                .FirstOrDefaultAsync(r => r.ID == postID);*/
+
+            var user = await _context.Users.FirstOrDefaultAsync(r => r.UserName == userName);
+
+            if (user != null)
+            {
+                if (user.Password == password)
+                {
+                    return user;
+                }
+                else
+                {
+                    throw new InvalidProgramException("Password did not match");
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException("User does not exist!");
+            }
+
+        }
+
 
         private bool UserExists(string userID)
         {
@@ -134,6 +161,7 @@ namespace JCMFitnessPostgresAPI.DataAccess
         }
 
         //UserWorkout*******************************
+
 
         public async Task<IEnumerable<UserWorkout>> GetUserWorkoutsListAsync()
         {

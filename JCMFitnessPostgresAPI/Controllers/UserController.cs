@@ -62,6 +62,24 @@ namespace JCMFitnessPostgresAPI.Controllers
 
         }
 
+        [HttpGet("loginuser")]
+        public async Task<ActionResult<User>> GetUserByUsernameAndPassword(string userName, string password)
+        {
+            try
+            {
+                return await _dataRepository.LoginUserAsync(userName, password);
+            }
+            catch(InvalidOperationException)
+            {
+                return BadRequest("User does not exist");
+            }
+            catch(InvalidProgramException)
+            {
+                return BadRequest("Password did not match");
+            }
+
+        }
+
         [HttpPut]
         public async  Task<IActionResult> UpdateUser([FromBody] User user)
         {
