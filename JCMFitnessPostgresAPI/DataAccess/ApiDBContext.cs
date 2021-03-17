@@ -21,8 +21,8 @@ namespace JCMFitnessPostgresAPI.DataAccess
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<UserWorkout>()
-                .HasKey(t => new { t.UserID, t.WorkoutID });
+           /* modelBuilder.Entity<UserWorkout>()
+                .HasKey(t => new { t.UserID, t.WorkoutID });*/
 
             modelBuilder.Entity<UserWorkout>()
                 .HasOne(pt => pt.Workout)

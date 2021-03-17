@@ -58,6 +58,11 @@ namespace JCMFitnessPostgresAPI.DataAccess
         //User *******************************
         public async Task<User> GetUserAsync(string userID)
         {
+           /* return await _context.Users.Include(r => r.UserWorkouts)
+               .Include(p => p.UserWorkouts)
+               .ThenInclude(pc => pc.)
+               .FirstOrDefaultAsync(r => r.ID == postID);*/
+
             return await Task.Run(() => _context.Users
             .First(r => r.UserID == userID));
         }
