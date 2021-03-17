@@ -33,8 +33,17 @@ namespace JCMFitnessPostgresAPI.Controllers
             {
                 //Guid obj = Guid.NewGuid();
                 //user.UserID = obj.ToString("n");
-                await _dataRepository.AddUserAsync(user);
-                return Ok();
+
+                try
+                {
+                    await _dataRepository.AddUserAsync(user);
+                    return Ok();
+                }
+                catch(InvalidOperationException e)
+                {
+                    return BadRequest(e);
+                }
+               
             }
             return BadRequest();
         }
