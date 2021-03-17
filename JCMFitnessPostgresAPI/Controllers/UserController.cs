@@ -39,19 +39,27 @@ namespace JCMFitnessPostgresAPI.Controllers
                     await _dataRepository.AddUserAsync(user);
                     return Ok();
                 }
-                catch(InvalidOperationException e)
+                catch
                 {
-                    return BadRequest(e);
+                    return BadRequest("User already exists");
                 }
-               
+
             }
-            return BadRequest();
+            return BadRequest("User Object is not valid");
         }
 
         [HttpGet("{id}")]
-        public async Task<User> GetUserByID(string id)
+        public async Task<ActionResult<User>> GetUserByID(string id)
         {
-            return await _dataRepository.GetUserAsync(id);
+            try
+            {
+                return await _dataRepository.GetUserAsync(id);
+            }
+            catch
+            {
+                return BadRequest("User id does not exist");
+            }
+
         }
 
         [HttpPut]
@@ -62,17 +70,25 @@ namespace JCMFitnessPostgresAPI.Controllers
                 await _dataRepository.EditUserAsync(user);
                 return Ok();
             }
-            return BadRequest();
+            return BadRequest("User object is not valid");
         }
 
         // DELETE: api/Users/5
-        [HttpDelete("{id}")]
+        [HttpDelete]
         public async Task<IActionResult> DeleteUser(string userID)
         {
-            await _dataRepository.DeleteUserAsync(userID);
-          
+            try
+            {
+                await _dataRepository.DeleteUserAsync(userID);
+                return Ok();
+            }
+            catch
+            {
+                return BadRequest("User Id does not exist");
+            }
 
-            return Ok();
+
+            //return Ok();
         }
     }
 }
