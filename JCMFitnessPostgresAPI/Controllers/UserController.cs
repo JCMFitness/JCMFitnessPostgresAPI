@@ -48,11 +48,11 @@ namespace JCMFitnessPostgresAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<User>> GetUserByID(string id)
+        public async Task<ActionResult<User>> GetUserByID(string userid)
         {
-            if (_dataRepository.UserExists(id))
+            if (_dataRepository.UserExists(userid))
             {
-                return await _dataRepository.GetUserAsync(id);
+                return await _dataRepository.GetUserAsync(userid);
             }
             else
             {
@@ -61,10 +61,10 @@ namespace JCMFitnessPostgresAPI.Controllers
         }
 
         [HttpGet("login")]
-        public async Task<ActionResult<User>> GetUserByUsernameAndPassword(string userName, string password)
+        public async Task<ActionResult<User>> GetUserByUsernameAndPassword(string username, string password)
         {
 
-            var user = await _dataRepository.LoginUserAsync(userName, password);
+            var user = await _dataRepository.LoginUserAsync(username, password);
 
             if (user == null)
             {
@@ -91,11 +91,11 @@ namespace JCMFitnessPostgresAPI.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteUser(string userID)
+        public async Task<IActionResult> DeleteUser(string userid)
         {
-            if (_dataRepository.UserExists(userID))
+            if (_dataRepository.UserExists(userid))
             {
-                await _dataRepository.DeleteUserAsync(userID);
+                await _dataRepository.DeleteUserAsync(userid);
                 return Ok();
             }
             else

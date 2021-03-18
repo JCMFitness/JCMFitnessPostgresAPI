@@ -60,12 +60,12 @@ namespace JCMFitnessPostgresAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<Workout>> GetWorkoutByID(string workoutID)
+        public async Task<ActionResult<Workout>> GetWorkoutByID(string workoutid)
         {
 
-            if (_dataRepository.WorkoutExists(workoutID))
+            if (_dataRepository.WorkoutExists(workoutid))
             {
-                return await _dataRepository.GetWorkoutAsync(workoutID);
+                return await _dataRepository.GetWorkoutAsync(workoutid);
             }
             else
             {
@@ -76,11 +76,11 @@ namespace JCMFitnessPostgresAPI.Controllers
 
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteWorkout(string workoutID)
+        public async Task<IActionResult> DeleteWorkout(string workoutid)
         {
-            if (_dataRepository.WorkoutExists(workoutID))
+            if (_dataRepository.WorkoutExists(workoutid))
             {
-                 await _dataRepository.DeleteWorkoutAsync(workoutID);
+                 await _dataRepository.DeleteWorkoutAsync(workoutid);
                 return Ok();
             }
             else

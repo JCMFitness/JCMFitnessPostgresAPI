@@ -29,22 +29,22 @@ namespace JCMFitnessPostgresAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Workout>> GetUserWorkouts(string userID)
+        public async Task<IEnumerable<Workout>> GetUserWorkouts(string userid)
         {
-            var userWorkout = await _dataRepository.GetUserWorkoutsAsync(userID);
+            var userWorkout = await _dataRepository.GetUserWorkoutsAsync(userid);
 
             return userWorkout;
         }
 
 
         [HttpPost]
-        public async Task<IActionResult> AddUserWorkout([FromBody] Workout workout, string userID)
+        public async Task<IActionResult> AddUserWorkout([FromBody] Workout workout, string userid)
         {
             if (ModelState.IsValid)
             {
                 //Guid obj = Guid.NewGuid();
                 //user.UserID = obj.ToString("n");
-                await _dataRepository.AddUserWorkoutAsync(workout, userID);
+                await _dataRepository.AddUserWorkoutAsync(workout, userid);
                 return Ok();
             }
             return BadRequest();
@@ -53,9 +53,9 @@ namespace JCMFitnessPostgresAPI.Controllers
 
         
         [HttpDelete]
-        public async Task<IActionResult> DeleteUserWorkouts(string workoutID, string userID)
+        public async Task<IActionResult> DeleteUserWorkouts(string workoutid, string userid)
         {
-            await _dataRepository.DeleteUserWorkoutAsync(workoutID, userID);
+            await _dataRepository.DeleteUserWorkoutAsync(workoutid, userid);
 
 
             return Ok();
@@ -63,9 +63,9 @@ namespace JCMFitnessPostgresAPI.Controllers
 
   
         [HttpDelete("deleteall")]
-        public async Task<IActionResult> DeleteUserWorkoutList(string userID)
+        public async Task<IActionResult> DeleteUserWorkoutList(string userid)
         {
-            await _dataRepository.DeleteUserWorkoutListAsync(userID);
+            await _dataRepository.DeleteUserWorkoutListAsync(userid);
 
 
             return Ok();
