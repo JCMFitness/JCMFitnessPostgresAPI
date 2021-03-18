@@ -18,7 +18,7 @@ namespace JCMFitnessPostgresAPI.DataAccess
         }
 
         //Workout*******************************
-        private bool WorkoutExists(string workoutID)
+        public bool WorkoutExists(string workoutID)
         {
             return _context.Workouts.Any(e => e.WorkoutID == workoutID);
         }
@@ -67,35 +67,22 @@ namespace JCMFitnessPostgresAPI.DataAccess
 
 
         //User *******************************
+
         public async Task<User> LoginUserAsync(string userName, string password)
         {
-            /* return await _context.Users.Include(r => r.UserWorkouts)
-                .Include(p => p.UserWorkouts)
-                .ThenInclude(pc => pc.)
-                .FirstOrDefaultAsync(r => r.ID == postID);*/
 
             var user = await _context.Users.FirstOrDefaultAsync(r => r.UserName == userName);
 
             if (user != null)
             {
-                if (user.Password == password)
-                {
-                    return user;
-                }
-                else
-                {
-                    throw new InvalidProgramException("Password did not match");
-                }
-            }
-            else
-            {
-                throw new InvalidOperationException("User does not exist!");
+                return user;
             }
 
+            return user;
         }
 
 
-        private bool UserExists(string userID)
+        public bool UserExists(string userID)
         {
             return _context.Users.Any(e => e.UserID == userID);
         }
@@ -107,29 +94,14 @@ namespace JCMFitnessPostgresAPI.DataAccess
                 .ThenInclude(pc => pc.)
                 .FirstOrDefaultAsync(r => r.ID == postID);*/
 
-            if (UserExists(userID))
-            {
                 return await Task.Run(() => _context.Users
                         .First(r => r.UserID == userID));
-            }
-            else
-            {
-                throw new InvalidOperationException("User does not exist!");
-            }
-
         }
 
         public async Task AddUserAsync(User user)
         {
-            if (!UserExists(user.UserID))
-            {
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
-            }
-            else
-            {
-                throw new InvalidOperationException("User already exists!");
-            }
         }
 
         public async Task<IEnumerable<User>> GetUsersAsync()
@@ -147,22 +119,18 @@ namespace JCMFitnessPostgresAPI.DataAccess
 
         public async Task DeleteUserAsync(string userID)
         {
-            if (UserExists(userID))
-            {
-                var user = await _context.Users.FindAsync(userID);
+            var user = await _context.Users.FindAsync(userID);
 
-                _context.Users.Remove(user);
-                await _context.SaveChangesAsync();
-            }
-            else
-            {
-                throw new InvalidOperationException("User id does not exist!");
-            }
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
         }
 
         //UserWorkout*******************************
 
-
+        public bool UserWorkoutExists(string userWorkoutID)
+        {
+            return _context.UserWorkouts.Any(e => e.Id == userWorkoutID);
+        }
         public async Task<IEnumerable<UserWorkout>> GetUserWorkoutsListAsync()
         {
             return await _context.UserWorkouts.ToListAsync();

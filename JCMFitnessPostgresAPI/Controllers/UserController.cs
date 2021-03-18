@@ -33,17 +33,16 @@ namespace JCMFitnessPostgresAPI.Controllers
             {
                 //Guid obj = Guid.NewGuid();
                 //user.UserID = obj.ToString("n");
-
-                try
+                if (!_dataRepository.UserExists(user.UserID))
                 {
                     await _dataRepository.AddUserAsync(user);
                     return Ok();
                 }
-                catch
+                else
                 {
+
                     return BadRequest("User already exists");
                 }
-
             }
             return BadRequest("User Object is not valid");
         }
@@ -51,37 +50,37 @@ namespace JCMFitnessPostgresAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUserByID(string id)
         {
-            try
+            if (_dataRepository.UserExists(id))
             {
                 return await _dataRepository.GetUserAsync(id);
             }
-            catch
+            else
             {
                 return BadRequest("User id does not exist");
             }
-
         }
 
-        [HttpGet("loginuser")]
+        [HttpGet("login")]
         public async Task<ActionResult<User>> GetUserByUsernameAndPassword(string userName, string password)
         {
-            try
+
+            var user = await _dataRepository.LoginUserAsync(userName, password);
+
+            if (user == null)
             {
-                return await _dataRepository.LoginUserAsync(userName, password);
+                return BadRequest("User with that username does not exist");
             }
-            catch(InvalidOperationException)
-            {
-                return BadRequest("User does not exist");
-            }
-            catch(InvalidProgramException)
+                
+            if(user.Password != password)
             {
                 return BadRequest("Password did not match");
             }
 
+            return user;
         }
 
         [HttpPut]
-        public async  Task<IActionResult> UpdateUser([FromBody] User user)
+        public async Task<IActionResult> UpdateUser([FromBody] User user)
         {
             if (ModelState.IsValid)
             {
@@ -95,18 +94,16 @@ namespace JCMFitnessPostgresAPI.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteUser(string userID)
         {
-            try
+            if (_dataRepository.UserExists(userID))
             {
                 await _dataRepository.DeleteUserAsync(userID);
                 return Ok();
             }
-            catch
+            else
             {
-                return BadRequest("User Id does not exist");
+                return BadRequest("User id does not exist");
             }
 
-
-            //return Ok();
         }
     }
 }
