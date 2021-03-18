@@ -18,6 +18,10 @@ namespace JCMFitnessPostgresAPI.DataAccess
         }
 
         //Workout*******************************
+        public bool WorkoutExists(string workoutID)
+        {
+            return _context.Workouts.Any(e => e.WorkoutID == workoutID);
+        }
 
         public async Task<IEnumerable<Workout>> GetWorkoutListAsync()
         {
@@ -27,9 +31,16 @@ namespace JCMFitnessPostgresAPI.DataAccess
 
         public async Task AddWorkoutAsync(Workout workout)
         {
+            if (!WorkoutExists(workout.WorkoutID))
+            {
+                _context.Workouts.Add(workout);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                throw new InvalidOperationException("Workout already exists!");
+            }
 
-            _context.Workouts.Add(workout);
-            await _context.SaveChangesAsync();
         }
 
 
@@ -56,17 +67,41 @@ namespace JCMFitnessPostgresAPI.DataAccess
 
 
         //User *******************************
+
+        public async Task<User> LoginUserAsync(string userName, string password)
+        {
+
+            var user = await _context.Users.FirstOrDefaultAsync(r => r.UserName == userName);
+
+            if (user != null)
+            {
+                return user;
+            }
+
+            return user;
+        }
+
+
+        public bool UserExists(string userID)
+        {
+            return _context.Users.Any(e => e.UserID == userID);
+        }
+
         public async Task<User> GetUserAsync(string userID)
         {
-            return await Task.Run(() => _context.Users
-            .First(r => r.UserID == userID));
+            /* return await _context.Users.Include(r => r.UserWorkouts)
+                .Include(p => p.UserWorkouts)
+                .ThenInclude(pc => pc.)
+                .FirstOrDefaultAsync(r => r.ID == postID);*/
+
+                return await Task.Run(() => _context.Users
+                        .First(r => r.UserID == userID));
         }
 
         public async Task AddUserAsync(User user)
         {
-
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<User>> GetUsersAsync()
@@ -76,7 +111,6 @@ namespace JCMFitnessPostgresAPI.DataAccess
 
         public async Task EditUserAsync(User user)
         {
-
             _context.Update(user);
             await _context.SaveChangesAsync();
 
@@ -93,34 +127,63 @@ namespace JCMFitnessPostgresAPI.DataAccess
 
         //UserWorkout*******************************
 
+        public bool UserWorkoutExists(string userWorkoutID)
+        {
+            return _context.UserWorkouts.Any(e => e.Id == userWorkoutID);
+        }
         public async Task<IEnumerable<UserWorkout>> GetUserWorkoutsListAsync()
         {
             return await _context.UserWorkouts.ToListAsync();
         }
 
-        public async Task AddUserWorkoutAsync(string workoutID, string userID)
+        public async Task AddUserWorkoutAsync(Workout workout, string userID)
         {
 
             var user = await EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(_context.Users, c => c.UserID == userID);
-            var workout = await EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(_context.Workouts, c => c.WorkoutID == workoutID);
+
+
+            var ExistingWorkout = await EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(_context.Workouts, c => c.WorkoutID == workout.WorkoutID);
 
             //var workouts = await EntityFrameworkQueryableExtensions.ToListAsync(_context.Workouts);
 
             //var workout = workouts.FirstOrDefault(c => c.WorkoutID == workoutID);
-         
 
-            var newUserWorkout = new UserWorkout()
+            //var newUserWorkout = new Workout();
+
+            if(ExistingWorkout == null)
             {
-                Id = Guid.NewGuid().ToString("n"),
-                WorkoutID = workout.WorkoutID,
-                UserID = userID,
-                Workout = workout,
-                User = user,
-                IsPublic = true,
-            };
+                _context.Workouts.Add(workout);
+                await _context.SaveChangesAsync();
 
-            _context.UserWorkouts.Add(newUserWorkout);
-            await _context.SaveChangesAsync();
+                var newUserWorkout = new UserWorkout()
+                {
+                    Id = Guid.NewGuid().ToString("n"),
+                    WorkoutID = workout.WorkoutID,
+                    UserID = userID,
+                    Workout = workout,
+                    User = user,
+                    IsPublic = true,
+                };
+
+                _context.UserWorkouts.Add(newUserWorkout);
+                await _context.SaveChangesAsync();
+
+            }
+            else
+            {
+                var newUserWorkout = new UserWorkout()
+                {
+                    Id = Guid.NewGuid().ToString("n"),
+                    WorkoutID = ExistingWorkout.WorkoutID,
+                    UserID = userID,
+                    Workout = ExistingWorkout,
+                    User = user,
+                    IsPublic = false,
+                };
+
+                _context.UserWorkouts.Add(newUserWorkout);
+                await _context.SaveChangesAsync();
+            }
 
         }
 
