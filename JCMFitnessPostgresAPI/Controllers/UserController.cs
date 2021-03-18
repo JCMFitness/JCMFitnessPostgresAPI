@@ -19,7 +19,7 @@ namespace JCMFitnessPostgresAPI.Controllers
             _dataRepository = userRepository;
         }
 
-        [HttpGet]
+        [HttpGet("getall")]
         public async Task<IEnumerable<User>> GetAllUsers()
         {
             return await _dataRepository.GetUsersAsync();
@@ -47,7 +47,7 @@ namespace JCMFitnessPostgresAPI.Controllers
             return BadRequest("User Object is not valid");
         }
 
-        [HttpGet("{id}")]
+        [HttpGet]
         public async Task<ActionResult<User>> GetUserByID(string id)
         {
             if (_dataRepository.UserExists(id))
@@ -90,7 +90,6 @@ namespace JCMFitnessPostgresAPI.Controllers
             return BadRequest("User object is not valid");
         }
 
-        // DELETE: api/Users/5
         [HttpDelete]
         public async Task<IActionResult> DeleteUser(string userID)
         {

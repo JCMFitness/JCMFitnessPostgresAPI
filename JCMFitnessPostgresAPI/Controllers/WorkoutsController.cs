@@ -21,7 +21,7 @@ namespace JCMFitnessPostgresAPI.Controllers
             _dataRepository = userRepository;
         }
 
-        [HttpGet]
+        [HttpGet("getall")]
         public async Task<IEnumerable<Workout>> GetAllWorkouts()
         {
             return await _dataRepository.GetWorkoutListAsync();
@@ -59,7 +59,7 @@ namespace JCMFitnessPostgresAPI.Controllers
             return BadRequest();
         }
 
-        [HttpGet("{id}")]
+        [HttpGet]
         public async Task<ActionResult<Workout>> GetWorkoutByID(string workoutID)
         {
 
@@ -74,8 +74,8 @@ namespace JCMFitnessPostgresAPI.Controllers
         }
 
 
-        // DELETE: api/Workouts/5
-        [HttpDelete("{id}")]
+
+        [HttpDelete]
         public async Task<IActionResult> DeleteWorkout(string workoutID)
         {
             if (_dataRepository.WorkoutExists(workoutID))
