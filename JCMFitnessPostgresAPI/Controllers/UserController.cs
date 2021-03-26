@@ -19,7 +19,7 @@ namespace JCMFitnessPostgresAPI.Controllers
             _dataRepository = userRepository;
         }
 
-        [HttpGet]
+        [HttpGet("getall")]
         public async Task<IEnumerable<User>> GetAllUsers()
         {
             return await _dataRepository.GetUsersAsync();
@@ -33,37 +33,76 @@ namespace JCMFitnessPostgresAPI.Controllers
             {
                 //Guid obj = Guid.NewGuid();
                 //user.UserID = obj.ToString("n");
-                await _dataRepository.AddUserAsync(user);
-                return Ok();
+                if (!_dataRepository.UserExists(user.UserID))
+                {
+                    await _dataRepository.AddUserAsync(user);
+                    return Ok();
+                }
+                else
+                {
+
+                    return BadRequest("User already exists");
+                }
             }
-            return BadRequest();
+            return BadRequest("User Object is not valid");
         }
 
-        [HttpGet("{id}")]
-        public async Task<User> GetUserByID(string id)
+        [HttpGet]
+        public async Task<ActionResult<User>> GetUserByID(string userid)
         {
-            return await _dataRepository.GetUserAsync(id);
+            if (_dataRepository.UserExists(userid))
+            {
+                return await _dataRepository.GetUserAsync(userid);
+            }
+            else
+            {
+                return BadRequest("User id does not exist");
+            }
+        }
+
+        [HttpGet("login")]
+        public async Task<ActionResult<User>> GetUserByUsernameAndPassword(string username, string password)
+        {
+
+            var user = await _dataRepository.LoginUserAsync(username, password);
+
+            if (user == null)
+            {
+                return BadRequest("User with that username does not exist");
+            }
+                
+            if(user.Password != password)
+            {
+                return BadRequest("Password did not match");
+            }
+
+            return user;
         }
 
         [HttpPut]
-        public async  Task<IActionResult> UpdateUser([FromBody] User user)
+        public async Task<IActionResult> UpdateUser([FromBody] User user)
         {
             if (ModelState.IsValid)
             {
                 await _dataRepository.EditUserAsync(user);
                 return Ok();
             }
-            return BadRequest();
+            return BadRequest("User object is not valid");
         }
 
-        // DELETE: api/Users/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(string userID)
+        [HttpDelete]
+        public async Task<IActionResult> DeleteUser(string userid)
         {
-            await _dataRepository.DeleteUserAsync(userID);
-          
+            if (_dataRepository.UserExists(userid))
+            {
+                await _dataRepository.DeleteUserAsync(userid);
+                return Ok();
+            }
+            else
+            {
+                return BadRequest("User id does not exist");
+            }
 
-            return Ok();
         }
     }
 }
