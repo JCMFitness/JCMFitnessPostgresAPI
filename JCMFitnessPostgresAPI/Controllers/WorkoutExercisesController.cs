@@ -25,7 +25,7 @@ namespace JCMFitnessPostgresAPI.Controllers
         [HttpGet("getall")]
         public async Task<IEnumerable<WorkoutExercises>> GetAllWorkoutExercises()
         {
-            return await _dataRepository.GetWorkoutExercisesListAsync();
+            return await _dataRepository.GetWorkoutExerciseListAsync();
         }
 
         [HttpGet]
@@ -44,7 +44,7 @@ namespace JCMFitnessPostgresAPI.Controllers
             {
                 //Guid obj = Guid.NewGuid();
                 //user.UserID = obj.ToString("n");
-                await _dataRepository.AddWorkoutExercisesAsync(workoutid, exercise);
+                await _dataRepository.AddWorkoutExerciseAsync(workoutid, exercise);
                 return Ok();
             }
             return BadRequest();
@@ -55,7 +55,7 @@ namespace JCMFitnessPostgresAPI.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteWorkoutExercises(string exerciseid, string workoutid)
         {
-            await _dataRepository.DeleteWorkoutExercisesAsync(workoutid, exerciseid);
+            await _dataRepository.DeleteWorkoutExerciseAsync(workoutid, exerciseid);
 
 
             return Ok();
@@ -63,9 +63,9 @@ namespace JCMFitnessPostgresAPI.Controllers
 
 
         [HttpDelete("deleteall")]
-        public async Task<IActionResult> DeleteWorkoutExercisesList(string exerciseid)
+        public async Task<IActionResult> DeleteWorkoutExercisesList(string workoutid)
         {
-            await _dataRepository.DeleteWorkoutExercisesListAsync(exerciseid);
+            await _dataRepository.DeleteWorkoutExerciseListAsync(workoutid);
 
 
             return Ok();

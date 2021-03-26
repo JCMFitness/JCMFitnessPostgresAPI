@@ -46,12 +46,12 @@ namespace JCMFitnessPostgresAPI.DataAccess
         public bool ExerciseExists(string exerciseID);
 
         //WorkoutExercises
-        public Task<IEnumerable<WorkoutExercises>> GetWorkoutExercisesListAsync();
-        public Task AddWorkoutExercisesAsync(string workoutid, Exercise exercise);
+        public Task<IEnumerable<WorkoutExercises>> GetWorkoutExerciseListAsync();
+        public Task AddWorkoutExerciseAsync(string workoutid, Exercise exercise);
         public Task<IEnumerable<Exercise>> GetWorkoutExercisesAsync(string workoutID);
-        public Task DeleteWorkoutExercisesAsync(string workoutID, string ExerciseID);
-        public Task DeleteWorkoutExercisesListAsync(string ExerciseID);
-        public bool WorkoutExercisesExists(string Id);
+        public Task DeleteWorkoutExerciseAsync(string workoutID, string ExerciseID);
+        public Task DeleteWorkoutExerciseListAsync(string ExerciseID);
+        public bool WorkoutExerciseExists(string Id);
 
     }
 

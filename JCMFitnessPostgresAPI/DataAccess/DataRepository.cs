@@ -235,12 +235,12 @@ namespace JCMFitnessPostgresAPI.DataAccess
 
         /*WorkOutExercises**********************************************************************************************************************************************/
 
-        public async Task<IEnumerable<WorkoutExercises>> GetWorkoutExercisesListAsync()
+        public async Task<IEnumerable<WorkoutExercises>> GetWorkoutExerciseListAsync()
         {
             return await _context.WorkoutExercises.ToListAsync();
         }
 
-        public async Task AddWorkoutExercisesAsync(string workoutid, Exercise exercise)
+        public async Task AddWorkoutExerciseAsync(string workoutid, Exercise exercise)
         {
             var Workout = await EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(_context.Workouts, c => c.WorkoutID == workoutid);
 
@@ -251,23 +251,7 @@ namespace JCMFitnessPostgresAPI.DataAccess
                 _context.Exercises.Add(exercise);
                 await _context.SaveChangesAsync();
 
-                var newWorkoutExercises = new WorkoutExercises()
-                {
-                    Id = Guid.NewGuid().ToString("n"),
-                    ExerciseID = exercise.ExerciseID,
-                    WorkoutID = workoutid,
-                    Exercise = exercise,
-                    Workout = Workout,
-                    IsPublic = true,
-                };
-
-                _context.WorkoutExercises.Add(newWorkoutExercises);
-                await _context.SaveChangesAsync();
-
-            }
-            else
-            {
-                var newWorkoutExercises = new WorkoutExercises()
+                var newWorkoutExercise = new WorkoutExercises()
                 {
                     Id = Guid.NewGuid().ToString("n"),
                     ExerciseID = exercise.ExerciseID,
@@ -277,7 +261,23 @@ namespace JCMFitnessPostgresAPI.DataAccess
                     IsPublic = false,
                 };
 
-                _context.WorkoutExercises.Add(newWorkoutExercises);
+                _context.WorkoutExercises.Add(newWorkoutExercise);
+                await _context.SaveChangesAsync();
+
+            }
+            else
+            {
+                var newWorkoutExercise = new WorkoutExercises()
+                {
+                    Id = Guid.NewGuid().ToString("n"),
+                    ExerciseID = ExistingExercise.ExerciseID,
+                    WorkoutID = workoutid,
+                    Exercise = ExistingExercise,
+                    Workout = Workout,
+                    IsPublic = false,
+                };
+
+                _context.WorkoutExercises.Add(newWorkoutExercise);
                 await _context.SaveChangesAsync();
             }
         }
@@ -290,8 +290,8 @@ namespace JCMFitnessPostgresAPI.DataAccess
                        .ToList());
         }
 
-        //Review
-        public async Task DeleteWorkoutExercisesAsync(string workoutID, string exerciseID)
+
+        public async Task DeleteWorkoutExerciseAsync(string workoutID, string exerciseID)
         {
             var workoutExercises = _context.WorkoutExercises.Where(m => m.ExerciseID == exerciseID).Where(m => m.WorkoutID == workoutID).ToList();
 
@@ -301,10 +301,10 @@ namespace JCMFitnessPostgresAPI.DataAccess
         }
 
 
-        //Review
-        public async Task DeleteWorkoutExercisesListAsync(string exerciseID)
+ 
+        public async Task DeleteWorkoutExerciseListAsync(string workoutID)
         {
-            var workoutExercises = _context.WorkoutExercises.Where(m => m.ExerciseID == exerciseID).ToList();
+            var workoutExercises = _context.WorkoutExercises.Where(m => m.WorkoutID == workoutID).ToList();
 
             foreach (var i in workoutExercises)
             {
@@ -314,7 +314,7 @@ namespace JCMFitnessPostgresAPI.DataAccess
             await _context.SaveChangesAsync();
         }
 
-        public bool WorkoutExercisesExists(string Id)
+        public bool WorkoutExerciseExists(string Id)
         {
             return _context.WorkoutExercises.Any(e => e.Id == Id);
         }
@@ -326,14 +326,14 @@ namespace JCMFitnessPostgresAPI.DataAccess
         }
         public async Task AddExerciseAsync(Exercise exercise)
         {
-            if (!WorkoutExists(exercise.ExerciseID))
+            if (!ExerciseExists(exercise.ExerciseID))
             {
                 _context.Exercises.Add(exercise);
                 await _context.SaveChangesAsync();
             }
             else
             {
-                throw new InvalidOperationException("Workout already exists!");
+                throw new InvalidOperationException("Exercise already exists!");
             }
         }
         public async Task<Exercise> GetExerciseAsync(string exerciseid)
