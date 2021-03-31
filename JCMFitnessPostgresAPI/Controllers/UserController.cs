@@ -1,5 +1,6 @@
 ﻿using JCMFitnessPostgresAPI.DataAccess;
 using JCMFitnessPostgresAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 namespace JCMFitnessPostgresAPI.Controllers
 {
     [Microsoft.AspNetCore.Mvc.Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class UserController : ControllerBase
     {
