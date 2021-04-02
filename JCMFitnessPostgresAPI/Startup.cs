@@ -38,17 +38,15 @@ namespace JCMFitnessPostgresAPI
 
             services.AddControllers();
 
-            //var sqlConnectionString = Configuration["PostgreSqlConnectionString"];
-
             services.AddDbContext<ApiDBContext>(options => options.UseNpgsql(convertUrlConnectionString(Configuration["LOCAL_DATABASE_URL"])));
 
-            services.AddDbContext<ApiUserDbContext>(options => options.UseNpgsql(convertUrlConnectionString(Configuration["IdentityConnection"])));
+            //services.AddDbContext<ApiUserDbContext>(options => options.UseNpgsql(convertUrlConnectionString(Configuration["IdentityConnection"])));
 
             services.AddScoped<IDataRepository, DataRepository>();
 
             //For Identity
             services.AddIdentity<ApiUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApiUserDbContext>()
+                .AddEntityFrameworkStores<ApiDBContext>()
                 .AddDefaultTokenProviders();
 
             //Adding Authentication

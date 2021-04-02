@@ -1,4 +1,5 @@
-﻿using JCMFitnessPostgresAPI.Models;
+﻿using JCMFitnessPostgresAPI.Authentication;
+using JCMFitnessPostgresAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -18,14 +19,14 @@ namespace JCMFitnessPostgresAPI.DataAccess
         public bool WorkoutExists(string workoutID);
 
         //User
-        public Task<IEnumerable<User>> GetUsersAsync();
-        public Task AddUserAsync(User User);
-        public Task<User> GetUserAsync(string id);
-        public Task EditUserAsync(User user);
+        public Task<IEnumerable<ApiUser>> GetUsersAsync();
+        public Task AddUserAsync(ApiUser User);
+        public Task<ApiUser> GetUserAsync(string id);
+        public Task EditUserAsync(ApiUser user);
         public Task DeleteUserAsync(string id);
 
         public bool UserExists(string userID);
-        public Task<User> LoginUserAsync(string userName, string password);
+        public Task<ApiUser> LoginUserAsync(string userName, string password);
 
 
         //UserWorkout

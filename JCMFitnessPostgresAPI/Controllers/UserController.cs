@@ -11,8 +11,8 @@ using System.Threading.Tasks;
 namespace JCMFitnessPostgresAPI.Controllers
 {
     [Microsoft.AspNetCore.Mvc.Route("api/[controller]")]
-    [Authorize(Roles = UserRoles.Admin)]
-    [Authorize]
+ /*   [Authorize(Roles = UserRoles.Admin)]
+    [Authorize]*/
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -24,20 +24,20 @@ namespace JCMFitnessPostgresAPI.Controllers
         }
 
         [HttpGet("getall")]
-        public async Task<IEnumerable<User>> GetAllUsers()
+        public async Task<IEnumerable<ApiUser>> GetAllUsers()
         {
             return await _dataRepository.GetUsersAsync();
         }
 
 
         [HttpPost]
-        public async Task<IActionResult> AddUser([FromBody] User user)
+        public async Task<IActionResult> AddUser([FromBody] ApiUser user)
         {
             if (ModelState.IsValid)
             {
                 //Guid obj = Guid.NewGuid();
                 //user.UserID = obj.ToString("n");
-                if (!_dataRepository.UserExists(user.UserID))
+                if (!_dataRepository.UserExists(user.Id))
                 {
                     await _dataRepository.AddUserAsync(user);
                     return Ok();
@@ -52,7 +52,7 @@ namespace JCMFitnessPostgresAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<User>> GetUserByID(string userid)
+        public async Task<ActionResult<ApiUser>> GetUserByID(string userid)
         {
             if (_dataRepository.UserExists(userid))
             {
@@ -65,7 +65,7 @@ namespace JCMFitnessPostgresAPI.Controllers
         }
 
         [HttpGet("login")]
-        public async Task<ActionResult<User>> GetUserByUsernameAndPassword(string username, string password)
+        public async Task<ActionResult<ApiUser>> GetUserByUsernameAndPassword(string username, string password)
         {
 
             var user = await _dataRepository.LoginUserAsync(username, password);
@@ -75,7 +75,7 @@ namespace JCMFitnessPostgresAPI.Controllers
                 return BadRequest("User with that username does not exist");
             }
                 
-            if(user.Password != password)
+            if(user.PasswordHash != password)
             {
                 return BadRequest("Password did not match");
             }
@@ -84,7 +84,7 @@ namespace JCMFitnessPostgresAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateUser([FromBody] User user)
+        public async Task<IActionResult> UpdateUser([FromBody] ApiUser user)
         {
             if (ModelState.IsValid)
             {

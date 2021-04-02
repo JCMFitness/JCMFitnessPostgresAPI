@@ -1,4 +1,5 @@
-﻿using JCMFitnessPostgresAPI.Models;
+﻿using JCMFitnessPostgresAPI.Authentication;
+using JCMFitnessPostgresAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -68,7 +69,7 @@ namespace JCMFitnessPostgresAPI.DataAccess
 
         //User *******************************
 
-        public async Task<User> LoginUserAsync(string userName, string password)
+        public async Task<ApiUser> LoginUserAsync(string userName, string password)
         {
 
             var user = await _context.Users.FirstOrDefaultAsync(r => r.UserName == userName);
@@ -84,10 +85,10 @@ namespace JCMFitnessPostgresAPI.DataAccess
 
         public bool UserExists(string userID)
         {
-            return _context.Users.Any(e => e.UserID == userID);
+            return _context.Users.Any(e => e.Id == userID);
         }
 
-        public async Task<User> GetUserAsync(string userID)
+        public async Task<ApiUser> GetUserAsync(string userID)
         {
             /* return await _context.Users.Include(r => r.UserWorkouts)
                 .Include(p => p.UserWorkouts)
@@ -95,21 +96,21 @@ namespace JCMFitnessPostgresAPI.DataAccess
                 .FirstOrDefaultAsync(r => r.ID == postID);*/
 
                 return await Task.Run(() => _context.Users
-                        .First(r => r.UserID == userID));
+                        .First(r => r.Id == userID));
         }
 
-        public async Task AddUserAsync(User user)
+        public async Task AddUserAsync(ApiUser user)
         {
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<User>> GetUsersAsync()
+        public async Task<IEnumerable<ApiUser>> GetUsersAsync()
         {
             return await _context.Users.ToListAsync();
         }
 
-        public async Task EditUserAsync(User user)
+        public async Task EditUserAsync(ApiUser user)
         {
             _context.Update(user);
             await _context.SaveChangesAsync();
@@ -139,7 +140,7 @@ namespace JCMFitnessPostgresAPI.DataAccess
         public async Task AddUserWorkoutAsync(Workout workout, string userID)
         {
 
-            var user = await EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(_context.Users, c => c.UserID == userID);
+            var user = await EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(_context.Users, c => c.Id == userID);
 
 
             var ExistingWorkout = await EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(_context.Workouts, c => c.WorkoutID == workout.WorkoutID);

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using JCMFitnessPostgresAPI.Models;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,5 +9,7 @@ namespace JCMFitnessPostgresAPI.Authentication
 {
     public class ApiUser:IdentityUser
     {
+        public List<UserWorkout> UserWorkouts { get; set; }
     }
 }
+

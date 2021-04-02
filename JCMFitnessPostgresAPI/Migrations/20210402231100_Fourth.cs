@@ -2,12 +2,19 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace JCMFitnessPostgresAPI.Migrations.ApiUserDb
+namespace JCMFitnessPostgresAPI.Migrations
 {
-    public partial class Authentication : Migration
+    public partial class Fourth : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_UserWorkouts_Users_UserID",
+                table: "UserWorkouts");
+
+            migrationBuilder.DropTable(
+                name: "Users");
+
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -189,10 +196,22 @@ namespace JCMFitnessPostgresAPI.Migrations.ApiUserDb
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_UserWorkouts_AspNetUsers_UserID",
+                table: "UserWorkouts",
+                column: "UserID",
+                principalTable: "AspNetUsers",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_UserWorkouts_AspNetUsers_UserID",
+                table: "UserWorkouts");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -213,6 +232,32 @@ namespace JCMFitnessPostgresAPI.Migrations.ApiUserDb
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    UserID = table.Column<string>(type: "text", nullable: false),
+                    Email = table.Column<string>(type: "text", nullable: true),
+                    FirstName = table.Column<string>(type: "text", nullable: true),
+                    IsAdmin = table.Column<bool>(type: "boolean", nullable: false),
+                    JoinedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    LastName = table.Column<string>(type: "text", nullable: true),
+                    Password = table.Column<string>(type: "text", nullable: true),
+                    UserName = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.UserID);
+                });
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_UserWorkouts_Users_UserID",
+                table: "UserWorkouts",
+                column: "UserID",
+                principalTable: "Users",
+                principalColumn: "UserID",
+                onDelete: ReferentialAction.Restrict);
         }
     }
 }
