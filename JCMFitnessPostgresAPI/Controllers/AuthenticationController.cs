@@ -113,7 +113,8 @@ namespace JCMFitnessPostgresAPI.Controllers
                 return Ok(new
                 {
                     token = new JwtSecurityTokenHandler().WriteToken(token),
-                    ValidTo = token.ValidTo.ToString("yyyy-MM-ddThh:mm:ss")
+                    ValidTo = token.ValidTo.ToString("yyyy-MM-ddThh:mm:ss"),
+                    User = user
                 });
             }
             return Unauthorized();
