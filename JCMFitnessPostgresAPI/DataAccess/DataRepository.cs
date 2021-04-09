@@ -69,18 +69,7 @@ namespace JCMFitnessPostgresAPI.DataAccess
 
         //User *******************************
 
-        public async Task<ApiUser> LoginUserAsync(string userName, string password)
-        {
 
-            var user = await _context.Users.FirstOrDefaultAsync(r => r.UserName == userName);
-
-            if (user != null)
-            {
-                return user;
-            }
-
-            return user;
-        }
 
 
         public bool UserExists(string userID)
@@ -99,11 +88,7 @@ namespace JCMFitnessPostgresAPI.DataAccess
                         .First(r => r.Id == userID));
         }
 
-        public async Task AddUserAsync(ApiUser user)
-        {
-                _context.Users.Add(user);
-                await _context.SaveChangesAsync();
-        }
+
 
         public async Task<IEnumerable<ApiUser>> GetUsersAsync()
         {
@@ -191,17 +176,7 @@ namespace JCMFitnessPostgresAPI.DataAccess
 
         public async Task<IEnumerable<Workout>> GetUserWorkoutsAsync(string userID)
         {
-            //var workoutList = await EntityFrameworkQueryableExtensions.ToListAsync(_context.Workouts);
-            //var userWorkoutList = await EntityFrameworkQueryableExtensions.ToListAsync(_context.UserWorkouts);
-
-            //var usersList = await EntityFrameworkQueryableExtensions.ToListAsync(_context.Users);
-
-            /*var userWorkouts = _context.UserWorkouts
-                    .Where(m => m.UserID == userID)
-                    .SelectMany(m => m.WorkoutID)
-                    .ToList();
-
-            return userWorkouts;*/
+        
 
             return await Task.Run(() => _context.UserWorkouts
                     .Where(m => m.UserID == userID)
@@ -212,11 +187,16 @@ namespace JCMFitnessPostgresAPI.DataAccess
         public async Task DeleteUserWorkoutAsync(string workoutID, string userID)
         {
 
-            //var workout = _context.UserWorkouts.Where(m => m.UserID == userID).Where(m => m.WorkoutID == workoutID).Select(m => m.Workout);
+            var ExistingWorkout = await EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(_context.Workouts, c => c.WorkoutID == workoutID);
 
             var userWorkout = _context.UserWorkouts.Where(m => m.UserID == userID).Where(m => m.WorkoutID == workoutID).ToList();
 
             _context.UserWorkouts.Remove(userWorkout.FirstOrDefault(m => m.WorkoutID == workoutID));
+
+            if (ExistingWorkout != null && ExistingWorkout.IsPublic == false)
+            {
+                await DeleteWorkoutAsync(ExistingWorkout.WorkoutID);
+            }
 
             await _context.SaveChangesAsync();
         }
@@ -294,9 +274,18 @@ namespace JCMFitnessPostgresAPI.DataAccess
 
         public async Task DeleteWorkoutExerciseAsync(string workoutID, string exerciseID)
         {
+
+            var ExistingExercise = await EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(_context.Exercises, c => c.ExerciseID == exerciseID);
+
             var workoutExercises = _context.WorkoutExercises.Where(m => m.ExerciseID == exerciseID).Where(m => m.WorkoutID == workoutID).ToList();
 
             _context.WorkoutExercises.Remove(workoutExercises.FirstOrDefault(m => m.WorkoutID == workoutID));
+
+            if (ExistingExercise != null && ExistingExercise.IsPublic == false)
+            {
+                await DeleteExerciseAsync(ExistingExercise.ExerciseID);
+            }
+
 
             await _context.SaveChangesAsync();
         }

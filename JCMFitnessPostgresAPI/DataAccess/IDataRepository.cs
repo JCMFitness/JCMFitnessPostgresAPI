@@ -20,13 +20,13 @@ namespace JCMFitnessPostgresAPI.DataAccess
 
         //User
         public Task<IEnumerable<ApiUser>> GetUsersAsync();
-        public Task AddUserAsync(ApiUser User);
+      
         public Task<ApiUser> GetUserAsync(string id);
         public Task EditUserAsync(ApiUser user);
         public Task DeleteUserAsync(string id);
 
         public bool UserExists(string userID);
-        public Task<ApiUser> LoginUserAsync(string userName, string password);
+      
 
 
         //UserWorkout

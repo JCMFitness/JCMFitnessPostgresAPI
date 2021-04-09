@@ -30,7 +30,7 @@ namespace JCMFitnessPostgresAPI.Controllers
         }
 
 
-        [HttpPost]
+        /*[HttpPost]
         public async Task<IActionResult> AddUser([FromBody] ApiUser user)
         {
             if (ModelState.IsValid)
@@ -49,7 +49,7 @@ namespace JCMFitnessPostgresAPI.Controllers
                 }
             }
             return BadRequest("User Object is not valid");
-        }
+        }*/
 
         [HttpGet]
         public async Task<ActionResult<ApiUser>> GetUserByID(string userid)
@@ -64,7 +64,7 @@ namespace JCMFitnessPostgresAPI.Controllers
             }
         }
 
-        [HttpGet("login")]
+  /*      [HttpGet("login")]
         public async Task<ActionResult<ApiUser>> GetUserByUsernameAndPassword(string username, string password)
         {
 
@@ -81,7 +81,7 @@ namespace JCMFitnessPostgresAPI.Controllers
             }
 
             return user;
-        }
+        }*/
 
         [HttpPut]
         public async Task<IActionResult> UpdateUser([FromBody] ApiUser user)
