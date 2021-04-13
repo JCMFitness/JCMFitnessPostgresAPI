@@ -33,22 +33,26 @@ namespace JCMFitnessPostgresAPI.DataAccess
             modelBuilder.Entity<UserWorkout>()
                 .HasOne(pt => pt.Workout)
                 .WithMany(p => p.UserWorkouts)
-                .HasForeignKey(pt => pt.WorkoutID);
+                .HasForeignKey(pt => pt.WorkoutID)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<UserWorkout>()
                 .HasOne(pt => pt.User)
                 .WithMany(t => t.UserWorkouts)
-                .HasForeignKey(pt => pt.UserID);
+                .HasForeignKey(pt => pt.UserID)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<WorkoutExercises>()
                 .HasOne(pt => pt.Workout)
                 .WithMany(t => t.WorkoutExercises)
-                .HasForeignKey(pt => pt.WorkoutID);
+                .HasForeignKey(pt => pt.WorkoutID)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<WorkoutExercises>()
                 .HasOne(pt => pt.Exercise)
                 .WithMany(p => p.WorkoutExercises)
-                .HasForeignKey(pt => pt.ExerciseID);
+                .HasForeignKey(pt => pt.ExerciseID)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

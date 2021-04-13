@@ -196,6 +196,7 @@ namespace JCMFitnessPostgresAPI.DataAccess
             if (ExistingWorkout != null && ExistingWorkout.IsPublic == false)
             {
                 await DeleteWorkoutAsync(ExistingWorkout.WorkoutID);
+                await DeleteWorkoutExerciseListAsync(ExistingWorkout.WorkoutID);
             }
 
             await _context.SaveChangesAsync();
@@ -299,6 +300,7 @@ namespace JCMFitnessPostgresAPI.DataAccess
             foreach (var i in workoutExercises)
             {
                 _context.WorkoutExercises.Remove(i);
+                await DeleteExerciseAsync(i.ExerciseID);
             }
 
             await _context.SaveChangesAsync();

@@ -3,15 +3,17 @@ using System;
 using JCMFitnessPostgresAPI.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace JCMFitnessPostgresAPI.Migrations
 {
     [DbContext(typeof(ApiDBContext))]
-    partial class ApiDBContextModelSnapshot : ModelSnapshot
+    [Migration("20210413155451_fixingCascadeDelete")]
+    partial class fixingCascadeDelete
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -321,8 +323,7 @@ namespace JCMFitnessPostgresAPI.Migrations
 
                     b.HasOne("JCMFitnessPostgresAPI.Models.Workout", "Workout")
                         .WithMany("UserWorkouts")
-                        .HasForeignKey("WorkoutID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("WorkoutID");
 
                     b.Navigation("User");
 
@@ -333,8 +334,7 @@ namespace JCMFitnessPostgresAPI.Migrations
                 {
                     b.HasOne("JCMFitnessPostgresAPI.Models.Exercise", "Exercise")
                         .WithMany("WorkoutExercises")
-                        .HasForeignKey("ExerciseID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ExerciseID");
 
                     b.HasOne("JCMFitnessPostgresAPI.Models.Workout", "Workout")
                         .WithMany("WorkoutExercises")
