@@ -20,13 +20,13 @@ namespace JCMFitnessPostgresAPI.Controllers
         }
 
         [HttpGet("getall")]
-        public async Task<IEnumerable<Exercise>> GetAllExcercises()
+        public async Task<IEnumerable<Exercise>> GetAllExercises()
         {
             return await _dataRepository.GetExerciseListAsync();
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddExcercise([FromBody] Exercise exercise)
+        public async Task<IActionResult> AddExercise([FromBody] Exercise exercise)
         {
 
             if (ModelState.IsValid)
