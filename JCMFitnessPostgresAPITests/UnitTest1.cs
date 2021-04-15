@@ -11,38 +11,7 @@ namespace JCMFitnessPostgresAPITests
         {
         }
 
-        [Test]
-        public void Test1()
-        {
-            var user1 = new User { FirstName = "Pete" };
-            var workout1 = new Workout { Name = "Running" };
-            var workout2 = new Workout { Name = "Jogging" };
-
-            var userworkout1 = new UserWorkout
-            {
-                User = user1,
-                Workout = workout1,
-                IsPublic = false
-            };
-
-            var userworkout2 = new UserWorkout
-            {
-                User = user1,
-                Workout = workout2,
-                IsPublic = true
-            };
-
-            var userworkout3 = new UserWorkout
-            {
-                User = user1,
-                Workout = workout2,
-                IsPublic = true
-            };
-
-            user1.UserWorkouts.Count.Should().Be(2);
-
-
-
-        }
+       
+        
     }
 }

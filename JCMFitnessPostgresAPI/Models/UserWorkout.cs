@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JCMFitnessPostgresAPI.Authentication;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -13,7 +14,7 @@ namespace JCMFitnessPostgresAPI.Models
         public string Id { get; set; }
 
         public string UserID { get; set; }
-        public User User { get; set; }
+        public ApiUser User { get; set; }
 
         public string WorkoutID { get; set; }
         public Workout Workout { get; set; }
