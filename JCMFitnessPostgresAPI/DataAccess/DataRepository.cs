@@ -107,6 +107,7 @@ namespace JCMFitnessPostgresAPI.DataAccess
         {
             var user = await _context.Users.FindAsync(userID);
 
+            await DeleteUserWorkoutListAsync(user.Id);
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
         }
@@ -191,12 +192,17 @@ namespace JCMFitnessPostgresAPI.DataAccess
 
             var userWorkout = _context.UserWorkouts.Where(m => m.UserID == userID).Where(m => m.WorkoutID == workoutID).ToList();
 
-            _context.UserWorkouts.Remove(userWorkout.FirstOrDefault(m => m.WorkoutID == workoutID));
+           
 
             if (ExistingWorkout != null && ExistingWorkout.IsPublic == false)
             {
+                await DeleteWorkoutExerciseListAsync(ExistingWorkout.WorkoutID);
+
+                _context.UserWorkouts.Remove(userWorkout.FirstOrDefault(m => m.WorkoutID == workoutID));
                 await DeleteWorkoutAsync(ExistingWorkout.WorkoutID);
             }
+
+            
 
             await _context.SaveChangesAsync();
         }
@@ -209,6 +215,12 @@ namespace JCMFitnessPostgresAPI.DataAccess
             foreach(var i in userWorkout)
             {
                 _context.UserWorkouts.Remove(i);
+
+              
+                await DeleteWorkoutExerciseListAsync(i.WorkoutID);
+
+
+                await DeleteWorkoutAsync(i.WorkoutID);
             }
 
             await _context.SaveChangesAsync();
@@ -279,10 +291,12 @@ namespace JCMFitnessPostgresAPI.DataAccess
 
             var workoutExercises = _context.WorkoutExercises.Where(m => m.ExerciseID == exerciseID).Where(m => m.WorkoutID == workoutID).ToList();
 
-            _context.WorkoutExercises.Remove(workoutExercises.FirstOrDefault(m => m.WorkoutID == workoutID));
+            
 
             if (ExistingExercise != null && ExistingExercise.IsPublic == false)
             {
+               
+                _context.WorkoutExercises.Remove(workoutExercises.FirstOrDefault(m => m.WorkoutID == workoutID));
                 await DeleteExerciseAsync(ExistingExercise.ExerciseID);
             }
 
@@ -298,11 +312,13 @@ namespace JCMFitnessPostgresAPI.DataAccess
 
             foreach (var i in workoutExercises)
             {
-                _context.WorkoutExercises.Remove(i);
+                await DeleteWorkoutExerciseAsync(i.WorkoutID, i.ExerciseID);
+                //_context.WorkoutExercises.Remove(i);
             }
 
             await _context.SaveChangesAsync();
         }
+
 
         public bool WorkoutExerciseExists(string Id)
         {

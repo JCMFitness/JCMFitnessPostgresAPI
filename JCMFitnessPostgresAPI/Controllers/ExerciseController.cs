@@ -10,23 +10,23 @@ namespace JCMFitnessPostgresAPI.Controllers
 {
     [Microsoft.AspNetCore.Mvc.Route("api/[controller]")]
     [ApiController]
-    public class ExcerciseController : ControllerBase
+    public class ExerciseController : ControllerBase
     {
         private readonly IDataRepository _dataRepository;
 
-        public ExcerciseController(IDataRepository userRepository)
+        public ExerciseController(IDataRepository userRepository)
         {
             _dataRepository = userRepository;
         }
 
         [HttpGet("getall")]
-        public async Task<IEnumerable<Exercise>> GetAllExcercises()
+        public async Task<IEnumerable<Exercise>> GetAllExercises()
         {
             return await _dataRepository.GetExerciseListAsync();
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddExcercise([FromBody] Exercise exercise)
+        public async Task<IActionResult> AddExercise([FromBody] Exercise exercise)
         {
 
             if (ModelState.IsValid)

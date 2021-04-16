@@ -38,7 +38,7 @@ namespace JCMFitnessPostgresAPI
 
             services.AddControllers();
 
-            services.AddDbContext<ApiDBContext>(options => options.UseNpgsql(convertUrlConnectionString(Configuration["HEROKU_DATABASE_URL"])));
+            services.AddDbContext<ApiDBContext>(options => options.UseNpgsql(convertUrlConnectionString(Configuration["AZURE_DATABASE_URL"])));
 
             //services.AddDbContext<ApiUserDbContext>(options => options.UseNpgsql(convertUrlConnectionString(Configuration["IdentityConnection"])));
 
@@ -132,7 +132,7 @@ namespace JCMFitnessPostgresAPI
 
 
 
-            return $"host={host}; port={port}; database={database}; username={user}; password={password}; SSL Mode=Require; Trust Server Certificate=true";
+            return $"host={host}; port={port}; database={database}; username={user}; password={password}; SSL Mode=Prefer; Trust Server Certificate=true";
         }
 
 
