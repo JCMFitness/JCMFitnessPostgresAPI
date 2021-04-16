@@ -7,11 +7,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using JCMFitnessPostgresAPI.DataAccess;
 using JCMFitnessPostgresAPI.Models;
+using Microsoft.AspNetCore.Authorization;
+using JCMFitnessPostgresAPI.Authentication;
 
 namespace JCMFitnessPostgresAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class WorkoutExercisesController : ControllerBase
     {
         private readonly IDataRepository _dataRepository;
@@ -23,6 +26,7 @@ namespace JCMFitnessPostgresAPI.Controllers
 
 
         [HttpGet("getall")]
+        [Authorize(Roles = UserRoles.Admin)]
         public async Task<IEnumerable<WorkoutExercises>> GetAllWorkoutExercises()
         {
             return await _dataRepository.GetWorkoutExerciseListAsync();

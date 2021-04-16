@@ -9,6 +9,8 @@ namespace JCMFitnessPostgresAPI.Authentication
 {
     public class ApiUser:IdentityUser
     {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
         public List<UserWorkout> UserWorkouts { get; set; }
     }
 }
