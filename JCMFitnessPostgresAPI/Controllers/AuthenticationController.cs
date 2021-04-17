@@ -1,4 +1,5 @@
 ﻿using JCMFitnessPostgresAPI.Authentication;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -118,6 +120,79 @@ namespace JCMFitnessPostgresAPI.Controllers
                 });
             }
             return Unauthorized();
+        }
+
+        [HttpGet("{scheme}")]
+        public async Task Get([FromRoute] string scheme)
+        {
+            const string callbackScheme = "myapp";
+
+            var auth = await Request.HttpContext.AuthenticateAsync(scheme);
+
+            if (!auth.Succeeded
+                || auth?.Principal == null
+                || !auth.Principal.Identities.Any(id => id.IsAuthenticated)
+                || string.IsNullOrEmpty(auth.Properties.GetTokenValue("access_token")))
+            {
+                // Not authenticated, challenge
+                await Request.HttpContext.ChallengeAsync(scheme);
+            }
+            else
+            {
+                var claims = auth.Principal.Identities.FirstOrDefault()?.Claims;
+
+             
+
+                var username = claims?.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Name)?.Value;
+                var id = claims?.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                var firstname = claims?.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.GivenName)?.Value;
+                var lastname = claims?.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Surname)?.Value;
+                var email = claims?.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Email)?.Value;
+
+
+                var userExist = await userManager.FindByEmailAsync(email);
+
+                if (userExist == null)
+                {
+                    ApiUser user = new ApiUser
+                    {
+                        Id = id,
+                        Email = email,
+                        SecurityStamp = Guid.NewGuid().ToString(),
+                        UserName = username.Replace(" ", "").ToLower()
+                    };
+
+                    var result = await userManager.CreateAsync(user);
+
+                    if (!result.Succeeded)
+                    {
+                        Console.WriteLine(result);
+                    }
+                        
+                }
+
+
+
+                // Get parameters to send back to the callback
+                var qs = new Dictionary<string, string>
+                {
+                    { "access_token", auth.Properties.GetTokenValue("access_token") },
+                    { "refresh_token", auth.Properties.GetTokenValue("refresh_token") ?? string.Empty },
+                    { "expires", (auth.Properties.ExpiresUtc?.ToUnixTimeSeconds() ?? -1).ToString() },
+                    { "email", email },
+                    {"id", id }
+                };
+
+                // Build the result url
+                var url = callbackScheme + "://#" + string.Join(
+                    "&",
+                    qs.Where(kvp => !string.IsNullOrEmpty(kvp.Value) && kvp.Value != "-1")
+                    .Select(kvp => $"{WebUtility.UrlEncode(kvp.Key)}={WebUtility.UrlEncode(kvp.Value)}"));
+
+                // Redirect to final url
+                Request.HttpContext.Response.Redirect(url);
+            }
+
         }
     }
 }

@@ -20,6 +20,7 @@ using System.Linq;
 
 using System.Threading.Tasks;
 using System.Text;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace JCMFitnessPostgresAPI
 {
@@ -49,6 +50,18 @@ namespace JCMFitnessPostgresAPI
                 .AddEntityFrameworkStores<ApiDBContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddAuthentication(o =>
+            {
+                o.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            })
+                .AddCookie()
+                .AddGoogle(g =>
+                {
+                    g.ClientId = "576944989227-8l94os8k65sltc8fspim0pcaqlt4kcua.apps.googleusercontent.com";
+                    g.ClientSecret = "8PRENu0lnO9Ck-7INd81bg3l";
+                    g.SaveTokens = true;
+                });
+
             //Adding Authentication
             services.AddAuthentication(options =>
             {
@@ -56,6 +69,8 @@ namespace JCMFitnessPostgresAPI
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             })
+
+
 
             //Adding Jwt Bearer
             .AddJwtBearer(options =>
@@ -152,6 +167,8 @@ namespace JCMFitnessPostgresAPI
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {

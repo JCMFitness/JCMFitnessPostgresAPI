@@ -30,27 +30,6 @@ namespace JCMFitnessPostgresAPI.Controllers
         }
 
 
-        /*[HttpPost]
-        public async Task<IActionResult> AddUser([FromBody] ApiUser user)
-        {
-            if (ModelState.IsValid)
-            {
-                //Guid obj = Guid.NewGuid();
-                //user.UserID = obj.ToString("n");
-                if (!_dataRepository.UserExists(user.Id))
-                {
-                    await _dataRepository.AddUserAsync(user);
-                    return Ok();
-                }
-                else
-                {
-
-                    return BadRequest("User already exists");
-                }
-            }
-            return BadRequest("User Object is not valid");
-        }*/
-
         [HttpGet]
         public async Task<ActionResult<ApiUser>> GetUserByID(string userid)
         {
@@ -64,24 +43,9 @@ namespace JCMFitnessPostgresAPI.Controllers
             }
         }
 
-  /*      [HttpGet("login")]
-        public async Task<ActionResult<ApiUser>> GetUserByUsernameAndPassword(string username, string password)
-        {
 
-            var user = await _dataRepository.LoginUserAsync(username, password);
 
-            if (user == null)
-            {
-                return BadRequest("User with that username does not exist");
-            }
-                
-            if(user.PasswordHash != password)
-            {
-                return BadRequest("Password did not match");
-            }
-
-            return user;
-        }*/
+ 
 
         [HttpPut]
         public async Task<IActionResult> UpdateUser([FromBody] ApiUser user)
