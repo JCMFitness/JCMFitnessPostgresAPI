@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 namespace JCMFitnessPostgresAPI.Controllers
 {
     [Microsoft.AspNetCore.Mvc.Route("api/[controller]")]
- /*   [Authorize(Roles = UserRoles.Admin)]
-    [Authorize]*/
+    [Authorize]
     [ApiController]
+  
     public class UserController : ControllerBase
     {
         private readonly IDataRepository _dataRepository;
@@ -24,6 +24,7 @@ namespace JCMFitnessPostgresAPI.Controllers
         }
 
         [HttpGet("getall")]
+        [Authorize(Roles = UserRoles.Admin)]
         public async Task<IEnumerable<ApiUser>> GetAllUsers()
         {
             return await _dataRepository.GetUsersAsync();
@@ -43,9 +44,6 @@ namespace JCMFitnessPostgresAPI.Controllers
             }
         }
 
-
-
- 
 
         [HttpPut]
         public async Task<IActionResult> UpdateUser([FromBody] ApiUser user)

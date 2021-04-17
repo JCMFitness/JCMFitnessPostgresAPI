@@ -35,15 +35,19 @@ namespace JCMFitnessPostgresAPI.Controllers
         [Route("Register")]
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
-            var userExist = await userManager.FindByNameAsync(model.UserName);
+            var userExist = await userManager.FindByEmailAsync(model.Email);
+
             if (userExist != null)
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = " User Already Exist" });
 
             ApiUser user = new ApiUser
             {
                 Email = model.Email,
+                LastName = model.LastName,
+                FirstName = model.FirstName,
                 SecurityStamp = Guid.NewGuid().ToString(),
                 UserName = model.UserName
+                
             };
 
             var result = await userManager.CreateAsync(user, model.Password);
