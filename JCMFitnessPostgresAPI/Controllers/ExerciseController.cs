@@ -11,7 +11,7 @@ namespace JCMFitnessPostgresAPI.Controllers
 {
     [Microsoft.AspNetCore.Mvc.Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class ExerciseController : ControllerBase
     {
         private readonly IDataRepository _dataRepository;

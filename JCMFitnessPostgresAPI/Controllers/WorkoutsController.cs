@@ -14,7 +14,7 @@ namespace JCMFitnessPostgresAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class WorkoutsController : ControllerBase
     {
         private readonly IDataRepository _dataRepository;

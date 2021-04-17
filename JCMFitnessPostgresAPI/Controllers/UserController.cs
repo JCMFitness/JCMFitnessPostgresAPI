@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace JCMFitnessPostgresAPI.Controllers
 {
     [Microsoft.AspNetCore.Mvc.Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     [ApiController]
   
     public class UserController : ControllerBase
@@ -24,7 +24,7 @@ namespace JCMFitnessPostgresAPI.Controllers
         }
 
         [HttpGet("getall")]
-        [Authorize(Roles = UserRoles.Admin)]
+        //[Authorize(Roles = UserRoles.Admin)]
         public async Task<IEnumerable<ApiUser>> GetAllUsers()
         {
             return await _dataRepository.GetUsersAsync();
