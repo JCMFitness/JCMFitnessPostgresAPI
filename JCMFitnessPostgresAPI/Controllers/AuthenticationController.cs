@@ -126,11 +126,11 @@ namespace JCMFitnessPostgresAPI.Controllers
             return Unauthorized();
         }
 
-        /*[HttpGet]
+        [HttpGet]
         [Route("{Scheme}")]
         public async Task Get([FromRoute] string scheme)
         {
-            const string callbackScheme = "myapp";
+            const string callbackScheme = "xamarinessentials";
 
             var auth = await Request.HttpContext.AuthenticateAsync(scheme);
 
@@ -146,7 +146,7 @@ namespace JCMFitnessPostgresAPI.Controllers
             {
                 var claims = auth.Principal.Identities.FirstOrDefault()?.Claims;
 
-             
+
 
                 var username = claims?.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Name)?.Value;
                 var id = claims?.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
@@ -173,7 +173,7 @@ namespace JCMFitnessPostgresAPI.Controllers
                     {
                         Console.WriteLine(result);
                     }
-                        
+
                 }
 
 
@@ -198,6 +198,6 @@ namespace JCMFitnessPostgresAPI.Controllers
                 Request.HttpContext.Response.Redirect(url);
             }
 
-        }*/
+        }
     }
 }
