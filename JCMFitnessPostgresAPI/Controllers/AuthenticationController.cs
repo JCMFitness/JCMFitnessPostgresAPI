@@ -126,7 +126,8 @@ namespace JCMFitnessPostgresAPI.Controllers
             return Unauthorized();
         }
 
-        [HttpGet("{scheme}")]
+        [HttpGet]
+        [Route("{Scheme}")]
         public async Task Get([FromRoute] string scheme)
         {
             const string callbackScheme = "myapp";
