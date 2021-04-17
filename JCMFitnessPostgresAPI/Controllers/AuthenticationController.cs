@@ -126,7 +126,7 @@ namespace JCMFitnessPostgresAPI.Controllers
             return Unauthorized();
         }
 
-        [HttpGet]
+        /*[HttpGet]
         [Route("{Scheme}")]
         public async Task Get([FromRoute] string scheme)
         {
@@ -198,6 +198,6 @@ namespace JCMFitnessPostgresAPI.Controllers
                 Request.HttpContext.Response.Redirect(url);
             }
 
-        }
+        }*/
     }
 }

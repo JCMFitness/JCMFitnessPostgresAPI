@@ -15,7 +15,7 @@ namespace JCMFitnessPostgresAPI.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-       /* const string callbackScheme = "myapp";
+        const string callbackScheme = "xamarinessentials";
 
         [HttpGet("{scheme}")]
         public async Task Get([FromRoute] string scheme)
@@ -33,14 +33,6 @@ namespace JCMFitnessPostgresAPI.Controllers
             else
             {
                 var claims = auth.Principal.Identities.FirstOrDefault()?.Claims;
-
-                ApiUser user = new ApiUser
-                {
-                    Email = model.Email,
-                    SecurityStamp = Guid.NewGuid().ToString(),
-                    UserName = model.UserName
-                };
-
 
                 var email = string.Empty;
                 email = claims?.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Email)?.Value;
@@ -64,6 +56,6 @@ namespace JCMFitnessPostgresAPI.Controllers
                 Request.HttpContext.Response.Redirect(url);
             }
 
-        }*/
+        }
     }
 }
