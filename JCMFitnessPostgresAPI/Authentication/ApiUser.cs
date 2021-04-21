@@ -11,6 +11,9 @@ namespace JCMFitnessPostgresAPI.Authentication
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public DateTimeOffset LastUpdated { get; set; }
+        public bool IsDeleted { get; set; }
+
         public List<UserWorkout> UserWorkouts { get; set; }
     }
 }

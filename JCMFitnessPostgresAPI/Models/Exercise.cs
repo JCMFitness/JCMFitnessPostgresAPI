@@ -16,6 +16,9 @@ namespace JCMFitnessPostgresAPI.Models
         public int Repititions { get; set; }
         public int Sets { get; set; }
         public bool IsPublic { get; set; }
+        public DateTimeOffset LastUpdated { get; set; }
+        public bool IsDeleted { get; set; }
+
         public List<WorkoutExercises> WorkoutExercises { get; set; }
     }
 }

@@ -25,7 +25,7 @@ namespace JCMFitnessPostgresAPI.Controllers
         }
 
         [HttpGet("getall")]
-        [Authorize(Roles = UserRoles.Admin)]
+        //[Authorize(Roles = UserRoles.Admin)]
         public async Task<IEnumerable<Workout>> GetAllWorkouts()
         {
             return await _dataRepository.GetWorkoutListAsync();
@@ -92,6 +92,12 @@ namespace JCMFitnessPostgresAPI.Controllers
                 return BadRequest("Workout id does not exist");
             }
             
+        }
+
+        [HttpPost("sync")]
+        public async Task SyncAllWorkouts(string userID, List<Workout> workouts)
+        {
+            await _dataRepository.SyncWorkoutsAsync(userID, workouts);
         }
 
     }

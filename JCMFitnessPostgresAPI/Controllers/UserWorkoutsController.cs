@@ -26,7 +26,7 @@ namespace JCMFitnessPostgresAPI.Controllers
 
 
         [HttpGet("getall")]
-        [Authorize(Roles = UserRoles.Admin)]
+        //[Authorize(Roles = UserRoles.Admin)]
         public async Task<IEnumerable<UserWorkout>> GetAllUserWorkouts()
         {
             return await _dataRepository.GetUserWorkoutsListAsync();

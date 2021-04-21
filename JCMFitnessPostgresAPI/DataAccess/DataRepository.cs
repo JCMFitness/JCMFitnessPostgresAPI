@@ -65,13 +65,27 @@ namespace JCMFitnessPostgresAPI.DataAccess
             await _context.SaveChangesAsync();
         }
 
+        public async Task SyncWorkoutsAsync(string userID, List<Workout> workouts)
+        {
+            // Pull sync is just getting all records that have changed since that date.
+            foreach (var w in workouts)
+                if (WorkoutExists(w.WorkoutID)) // Does not exist, hence insert 
+                    await AddUserWorkoutAsync(w, userID);
+                else if (w.IsDeleted)
+                    await DeleteUserWorkoutAsync(w.WorkoutID, userID);
+                else
+                {
+                    var w1 = await GetWorkoutAsync(w.WorkoutID);
+                    if(w.LastUpdated > w1.LastUpdated)
+                    {
+                        await EditWorkoutAsync(w);
+                    }
+                }
+                   
+        }
 
 
         //User *******************************
-
-
-
-
         public bool UserExists(string userID)
         {
             return _context.Users.Any(e => e.Id == userID);
@@ -131,12 +145,6 @@ namespace JCMFitnessPostgresAPI.DataAccess
 
             var ExistingWorkout = await EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(_context.Workouts, c => c.WorkoutID == workout.WorkoutID);
 
-            //var workouts = await EntityFrameworkQueryableExtensions.ToListAsync(_context.Workouts);
-
-            //var workout = workouts.FirstOrDefault(c => c.WorkoutID == workoutID);
-
-            //var newUserWorkout = new Workout();
-
             if(ExistingWorkout == null)
             {
                 _context.Workouts.Add(workout);
@@ -177,8 +185,6 @@ namespace JCMFitnessPostgresAPI.DataAccess
 
         public async Task<IEnumerable<Workout>> GetUserWorkoutsAsync(string userID)
         {
-        
-
             return await Task.Run(() => _context.UserWorkouts
                     .Where(m => m.UserID == userID)
                     .Select(m => m.Workout)
