@@ -1,6 +1,7 @@
 ﻿using JCMFitnessPostgresAPI.Authentication;
 using JCMFitnessPostgresAPI.Models;
 using JCMFitnessPostgresAPI.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -107,7 +108,7 @@ namespace JCMFitnessPostgresAPI.DataAccess
                 .ThenInclude(pc => pc.)
                 .FirstOrDefaultAsync(r => r.ID == postID);*/
 
-                return await Task.Run(() => _context.Users
+                return await Task.Run(() => _context.Users.AsNoTracking()
                         .First(r => r.Id == userID));
         }
 
@@ -120,6 +121,7 @@ namespace JCMFitnessPostgresAPI.DataAccess
 
         public async Task EditUserAsync(ApiUser user)
         {
+            user.LastUpdated = DateTimeWithZone.LocalTime(DateTime.Now);
             _context.Update(user);
             await _context.SaveChangesAsync();
 
@@ -133,6 +135,24 @@ namespace JCMFitnessPostgresAPI.DataAccess
             await DeleteUserWorkoutListAsync(user.Id);
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task SyncUserAsync(ApiUser user)
+        {
+            var dbUser = await GetUserAsync(user.Id);
+          
+            if (user.LastUpdated > dbUser.LastUpdated)
+            {
+
+                dbUser.Email = user.Email;
+                dbUser.LastName = user.LastName;
+                dbUser.FirstName = user.FirstName;
+                dbUser.UserName = user.UserName;
+                dbUser.IsDeleted = user.IsDeleted;
+
+
+                await EditUserAsync(dbUser);
+            }
         }
 
         //UserWorkout*******************************

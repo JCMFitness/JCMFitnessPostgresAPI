@@ -25,9 +25,9 @@ namespace JCMFitnessPostgresAPI.DataAccess
         public Task<ApiUser> GetUserAsync(string id);
         public Task EditUserAsync(ApiUser user);
         public Task DeleteUserAsync(string id);
-
         public bool UserExists(string userID);
-      
+        public Task SyncUserAsync(ApiUser user);
+
 
 
         //UserWorkout
