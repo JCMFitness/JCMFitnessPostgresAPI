@@ -46,6 +46,7 @@ namespace JCMFitnessPostgresAPI.DataAccess
         public Task EditExerciseAsync(Exercise exercise);
         public Task DeleteExerciseAsync(string exerciseID);
         public bool ExerciseExists(string exerciseID);
+        public Task SyncExercisesAsync(string workoutID, List<Exercise> exercises);
 
         //WorkoutExercises
         public Task<IEnumerable<WorkoutExercises>> GetWorkoutExerciseListAsync();
