@@ -146,15 +146,7 @@ namespace JCMFitnessPostgresAPI.DataAccess
           
             if (user.LastUpdated > dbUser.LastUpdated)
             {
-
-                dbUser.Email = user.Email;
-                dbUser.LastName = user.LastName;
-                dbUser.FirstName = user.FirstName;
-                dbUser.UserName = user.UserName;
-                dbUser.IsDeleted = user.IsDeleted;
-
-
-                await EditUserAsync(dbUser);
+                await EditUserAsync(user);
             }
         }
 
@@ -218,13 +210,13 @@ namespace JCMFitnessPostgresAPI.DataAccess
         }
 
 
-        public async Task<IEnumerable<UserWorkout>> GetUserWorkoutsAsync(string userID)
+        public async Task<IEnumerable<Workout>> GetUserWorkoutsAsync(string userID)
         {
             return await Task.Run(() => _context.UserWorkouts
-             .Include( e => e.Workout)
-             .ThenInclude( w => w.WorkoutExercises)
-                    .Where(m => m.UserID == userID)
-                    .ToList());
+             .Include(e => e.Workout)
+             .ThenInclude(w => w.WorkoutExercises)
+             .Where(m => m.UserID == userID)
+             .Select(d => d.Workout));
 
 
         }
