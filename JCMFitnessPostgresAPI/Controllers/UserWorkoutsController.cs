@@ -33,7 +33,7 @@ namespace JCMFitnessPostgresAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Workout>> GetUserWorkouts(string userid)
+        public async Task<IEnumerable<UserWorkout>> GetUserWorkouts(string userid)
         {
             var userWorkout = await _dataRepository.GetUserWorkoutsAsync(userid);
 

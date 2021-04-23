@@ -112,11 +112,7 @@ namespace JCMFitnessPostgresAPI.DataAccess
                 .ThenInclude(pc => pc.)
                 .FirstOrDefaultAsync(r => r.ID == postID);*/
 
-                return await Task.Run(() => _context.Users.AsNoTracking()
-                .Include(e => e.UserWorkouts)
-                .ThenInclude( w => w.Workout)
-                .ThenInclude( m => m.WorkoutExercises)
-                        .First(r => r.Id == userID));
+                return await Task.Run(() => _context.Users.AsNoTracking().First(r => r.Id == userID));
         }
 
 
@@ -222,11 +218,12 @@ namespace JCMFitnessPostgresAPI.DataAccess
         }
 
 
-        public async Task<IEnumerable<Workout>> GetUserWorkoutsAsync(string userID)
+        public async Task<IEnumerable<UserWorkout>> GetUserWorkoutsAsync(string userID)
         {
             return await Task.Run(() => _context.UserWorkouts
+             .Include( e => e.Workout)
+             .ThenInclude( w => w.WorkoutExercises)
                     .Where(m => m.UserID == userID)
-                    .Select(m => m.Workout)
                     .ToList());
 
 
