@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace JCMFitnessPostgresAPI.DataAccess
 {
@@ -62,8 +63,11 @@ namespace JCMFitnessPostgresAPI.DataAccess
 
         public async Task<Workout> GetWorkoutAsync(string workoutID)
         {
-            return await _context.Workouts.AsNoTracking()
-                .FirstOrDefaultAsync(r => r.WorkoutID == workoutID);
+            /*return await _context.Workouts.AsNoTracking()
+                .FirstOrDefaultAsync(r => r.WorkoutID == workoutID);*/
+
+            return await _context.Workouts.Include(r => r.WorkoutExercises).AsNoTracking()
+             .FirstOrDefaultAsync(r => r.WorkoutID == workoutID);
         }
 
         public async Task DeleteWorkoutAsync(string workoutID)
@@ -109,6 +113,9 @@ namespace JCMFitnessPostgresAPI.DataAccess
                 .FirstOrDefaultAsync(r => r.ID == postID);*/
 
                 return await Task.Run(() => _context.Users.AsNoTracking()
+                .Include(e => e.UserWorkouts)
+                .ThenInclude( w => w.Workout)
+                .ThenInclude( m => m.WorkoutExercises)
                         .First(r => r.Id == userID));
         }
 
@@ -221,6 +228,8 @@ namespace JCMFitnessPostgresAPI.DataAccess
                     .Where(m => m.UserID == userID)
                     .Select(m => m.Workout)
                     .ToList());
+
+
         }
 
         public async Task DeleteUserWorkoutAsync(string workoutID, string userID)
