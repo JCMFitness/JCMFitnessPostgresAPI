@@ -20,20 +20,25 @@ namespace JCMFitnessPostgresAPI
     {
         public static void Main(string[] args)
         {
-            var config = new ConfigurationBuilder()
-                      .AddJsonFile("appsettings.json")
-                      .Build();
+            /* var config = new ConfigurationBuilder()
+                       .AddJsonFile("appsettings.json")
+                       .Build();
 
-            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
+
+             Log.Logger = new LoggerConfiguration()
+                 .Enrich.FromLogContext()
+                 .WriteTo.Elasticsearch(ConfigureElasticSink(config, environment))
+                 .MinimumLevel.Information()
+                 .Enrich.WithProperty("Environment", environment)
+                 .ReadFrom.Configuration(config)
+                 .CreateLogger();*/
 
             Log.Logger = new LoggerConfiguration()
-                .Enrich.FromLogContext()
-                .WriteTo.Elasticsearch(ConfigureElasticSink(config, environment))
                 .MinimumLevel.Information()
-                .Enrich.WithProperty("Environment", environment)
-                .ReadFrom.Configuration(config)
-                .CreateLogger();
+                        .WriteTo.Console()
+                            .CreateLogger();
 
             try
             {

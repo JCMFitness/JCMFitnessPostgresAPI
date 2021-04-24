@@ -38,12 +38,9 @@ namespace JCMFitnessPostgresAPI
         {
 
 
-                services.AddControllers()
-               .AddNewtonsoftJson(options =>
-               options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
-
-
-
+            services.AddControllers()
+            .AddNewtonsoftJson(options =>
+            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             services.AddDbContext<ApiDBContext>(options => options.UseNpgsql(convertUrlConnectionString(Configuration["HEROKU_DATABASE_URL"])));
 
