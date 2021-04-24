@@ -21,6 +21,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Serilog;
 
 namespace JCMFitnessPostgresAPI
 {
@@ -165,7 +166,7 @@ namespace JCMFitnessPostgresAPI
             app.UseAuthentication();
 
             app.UseRouting();
-
+            app.UseSerilogRequestLogging();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
