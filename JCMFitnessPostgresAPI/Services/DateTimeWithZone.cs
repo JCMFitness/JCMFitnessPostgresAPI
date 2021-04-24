@@ -10,17 +10,17 @@ namespace JCMFitnessPostgresAPI.Services
 
         private static readonly TimeZoneInfo timeZone;
 
-        static DateTimeWithZone()
+      /*  static DateTimeWithZone()
         {
             //I added web.config <add key="CurrentTimeZoneId" value="Central Europe Standard Time" />
             //You can add value directly into function.
             timeZone = TimeZoneInfo.FindSystemTimeZoneById("US Mountain Standard Time");
-        }
+        }*/
 
 
         public static DateTime LocalTime(this DateTime t)
         {
-            return TimeZoneInfo.ConvertTime(t, timeZone);
+            return TimeZoneInfo.ConvertTimeToUtc(t, TimeZoneInfo.Local);
         }
     }
 }
