@@ -3,6 +3,7 @@ using JCMFitnessPostgresAPI.DataAccess;
 using JCMFitnessPostgresAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,16 +18,19 @@ namespace JCMFitnessPostgresAPI.Controllers
     public class UserController : ControllerBase
     {
         private readonly IDataRepository _dataRepository;
+        private readonly ILogger<UserController> logger;
 
-        public UserController(IDataRepository userRepository)
+        public UserController(IDataRepository userRepository, ILogger<UserController> logger)
         {
             _dataRepository = userRepository;
+            this.logger = logger;
         }
 
         [HttpGet("getall")]
         //[Authorize(Roles = UserRoles.Admin)]
         public async Task<IEnumerable<ApiUser>> GetAllUsers()
         {
+            logger.LogInformation("Called to get all user");
             return await _dataRepository.GetUsersAsync();
         }
 
