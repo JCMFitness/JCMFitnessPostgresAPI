@@ -44,14 +44,13 @@ namespace JCMFitnessPostgresAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> AddUserWorkout([FromBody] Workout workout, string userid)
         {
-            if (ModelState.IsValid)
-            {
-                //Guid obj = Guid.NewGuid();
-                //user.UserID = obj.ToString("n");
-                await _dataRepository.AddUserWorkoutAsync(workout, userid);
-                return Ok();
-            }
-            return BadRequest();
+            
+            //Guid obj = Guid.NewGuid();
+            //user.UserID = obj.ToString("n");
+            await _dataRepository.AddUserWorkoutAsync(workout, userid);
+            return Ok();
+            
+            //return BadRequest("Sorry model is not valid");
         }
 
 

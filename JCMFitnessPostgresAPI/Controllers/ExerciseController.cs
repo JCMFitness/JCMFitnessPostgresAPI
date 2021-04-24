@@ -56,7 +56,7 @@ namespace JCMFitnessPostgresAPI.Controllers
                 await _dataRepository.EditExerciseAsync(exercise);
                 return Ok();
             }
-            return BadRequest();
+            return BadRequest("Exercise model is not Valid");
         }
 
         [HttpGet]
