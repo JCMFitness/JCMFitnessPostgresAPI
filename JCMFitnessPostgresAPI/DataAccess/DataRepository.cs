@@ -215,6 +215,7 @@ namespace JCMFitnessPostgresAPI.DataAccess
             return await Task.Run(() => _context.UserWorkouts
              .Include(e => e.Workout)
              .ThenInclude(w => w.WorkoutExercises)
+             .ThenInclude(s => s.Exercise)
              .Where(m => m.UserID == userID)
              .Select(d => d.Workout));
 
