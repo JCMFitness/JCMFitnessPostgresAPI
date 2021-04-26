@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -23,12 +25,14 @@ namespace JCMFitnessPostgresAPI.Controllers
         private readonly UserManager<ApiUser> userManager;
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly IConfiguration _configuration;
+        private readonly ILogger<AuthenticationController> _logger;
 
-        public AuthenticationController(UserManager<ApiUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+        public AuthenticationController(UserManager<ApiUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, ILogger<AuthenticationController> logger)
         {
             this.userManager = userManager;
             this.roleManager = roleManager;
             _configuration = configuration;
+            _logger = logger;
         }
 
         [HttpPost]
@@ -52,7 +56,11 @@ namespace JCMFitnessPostgresAPI.Controllers
 
             var result = await userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
+            {
+                
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "Failed to register new user" });
+            }
+               
 
             return Ok(new Response { Status = "Success", Message = "User Created Successfully" });
         }
@@ -115,7 +123,7 @@ namespace JCMFitnessPostgresAPI.Controllers
                     claims: authClaims,
                     signingCredentials: new SigningCredentials(authSiginKey, SecurityAlgorithms.HmacSha256Signature)
                     );
-
+                _logger.LogInformation("Successfully Logged in User: {userId}", user.Id);
                 return Ok(new
                 {
                     token = new JwtSecurityTokenHandler().WriteToken(token),
