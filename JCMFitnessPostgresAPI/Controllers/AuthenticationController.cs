@@ -20,6 +20,9 @@ namespace JCMFitnessPostgresAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
+    //Logging template:
+    //{Prefix}: {Message}, {ObjectsToBeLogged}
     public class AuthenticationController : ControllerBase
     {
         private readonly UserManager<ApiUser> userManager;
@@ -60,8 +63,8 @@ namespace JCMFitnessPostgresAPI.Controllers
                 
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "Failed to register new user" });
             }
-               
 
+            _logger.LogInformation("{Prefix}: Successfully registered new user under username: {Username}", Prefixes.AUTH, user.UserName);
             return Ok(new Response { Status = "Success", Message = "User Created Successfully" });
         }
 
@@ -123,7 +126,7 @@ namespace JCMFitnessPostgresAPI.Controllers
                     claims: authClaims,
                     signingCredentials: new SigningCredentials(authSiginKey, SecurityAlgorithms.HmacSha256Signature)
                     );
-                _logger.LogInformation("Successfully Logged in User: {userId}", user.Id);
+                _logger.LogInformation("{Prefix}: Successfully Logged in User: {userId}",Prefixes.AUTH, user.Id);
                 return Ok(new
                 {
                     token = new JwtSecurityTokenHandler().WriteToken(token),
