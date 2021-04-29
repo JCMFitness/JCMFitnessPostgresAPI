@@ -78,25 +78,7 @@ namespace JCMFitnessPostgresAPI.DataAccess
             await _context.SaveChangesAsync();
         }
 
-        public async Task SyncWorkoutsAsync(string userID, List<Workout> workouts)
-        {
-            // Pull sync is just getting all records that have changed since that date.
-            foreach (var w in workouts)
-                if (!WorkoutExists(w.WorkoutID)) // Does not exist, hence insert 
-                    await AddUserWorkoutAsync(w, userID);
-                else if (w.IsDeleted)
-                    await DeleteUserWorkoutAsync(w.WorkoutID, userID);
-                else
-                {
-                    var w1 = await GetWorkoutAsync(w.WorkoutID);
-
-                    if(w.LastUpdated > w1.LastUpdated)
-                    {
-                        await EditWorkoutAsync(w);
-                    }
-                }
-                   
-        }
+        
 
 
         //User *******************************
@@ -261,6 +243,26 @@ namespace JCMFitnessPostgresAPI.DataAccess
             await _context.SaveChangesAsync();
         }
 
+        public async Task SyncWorkoutsAsync(string userID, List<Workout> workouts)
+        {
+            // Pull sync is just getting all records that have changed since that date.
+            foreach (var w in workouts)
+                if (!WorkoutExists(w.WorkoutID)) // Does not exist, hence insert 
+                    await AddUserWorkoutAsync(w, userID);
+                else if (w.IsDeleted)
+                    await DeleteUserWorkoutAsync(w.WorkoutID, userID);
+                else
+                {
+                    var w1 = await GetWorkoutAsync(w.WorkoutID);
+
+                    if (w.LastUpdated > w1.LastUpdated)
+                    {
+                        await EditWorkoutAsync(w);
+                    }
+                }
+
+        }
+
         /*WorkOutExercises**********************************************************************************************************************************************/
 
         public async Task<IEnumerable<WorkoutExercises>> GetWorkoutExerciseListAsync()
@@ -362,6 +364,28 @@ namespace JCMFitnessPostgresAPI.DataAccess
             return _context.WorkoutExercises.Any(e => e.Id == Id);
         }
 
+
+
+        public async Task SyncExercisesAsync(string workoutID, List<Exercise> exercises)
+        {
+            // Pull sync is just getting all records that have changed since that date.
+            foreach (var w in exercises)
+                if (!ExerciseExists(w.ExerciseID)) // Does not exist, hence insert 
+                    await AddWorkoutExerciseAsync(workoutID, w);
+                else if (w.IsDeleted)
+                    await DeleteWorkoutExerciseAsync(workoutID, w.ExerciseID);
+                else
+                {
+                    var w1 = await GetExerciseAsync(w.ExerciseID);
+
+                    if (w.LastUpdated > w1.LastUpdated)
+                    {
+                        await EditExerciseAsync(w);
+                    }
+                }
+
+        }
+
         /*Exercises*****************************************************************************************************************************/
         public async Task<IEnumerable<Exercise>> GetExerciseListAsync()
         {
@@ -403,25 +427,7 @@ namespace JCMFitnessPostgresAPI.DataAccess
             return _context.Exercises.Any(e => e.ExerciseID == exerciseid);
         }
 
-        public async Task SyncExercisesAsync(string workoutID, List<Exercise> exercises)
-        {
-            // Pull sync is just getting all records that have changed since that date.
-            foreach (var w in exercises)
-                if (!ExerciseExists(w.ExerciseID)) // Does not exist, hence insert 
-                    await AddWorkoutExerciseAsync(workoutID, w);
-                else if (w.IsDeleted)
-                    await DeleteWorkoutExerciseAsync(workoutID, w.ExerciseID);
-                else
-                {
-                    var w1 = await GetExerciseAsync(w.ExerciseID);
-
-                    if (w.LastUpdated > w1.LastUpdated)
-                    {
-                        await EditExerciseAsync(w);
-                    }
-                }
-
-        }
+       
 
     }
 

@@ -94,11 +94,7 @@ namespace JCMFitnessPostgresAPI.Controllers
             
         }
 
-        [HttpPost("sync")]
-        public async Task SyncAllWorkouts(string userID, List<Workout> workouts)
-        {
-            await _dataRepository.SyncWorkoutsAsync(userID, workouts);
-        }
+      
 
     }
 }
