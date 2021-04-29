@@ -8,6 +8,7 @@ namespace JCMFitnessPostgresAPI
     public class Prefixes
     {
         public const string AUTH = "AUTH_EVENT";
-
+        public const string ROLE = "ROLES_EVENT";
+        public const string EXER = "EXERCISE_EVENT";
     }
 }

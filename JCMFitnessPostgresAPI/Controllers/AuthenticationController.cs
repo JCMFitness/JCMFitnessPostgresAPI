@@ -45,7 +45,11 @@ namespace JCMFitnessPostgresAPI.Controllers
             var userExist = await userManager.FindByEmailAsync(model.Email);
 
             if (userExist != null)
+            {
+                _logger.LogWarning("{Prefix}: Attempted to register an existing user",Prefixes.AUTH);
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = " User Already Exist" });
+            }
+                
 
             ApiUser user = new ApiUser
             {
@@ -60,11 +64,11 @@ namespace JCMFitnessPostgresAPI.Controllers
             var result = await userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
             {
-                
+                _logger.LogError("{Prefix}: Server encountered an error registering user: {Username}/{UserId}",Prefixes.AUTH,user.UserName,user.Id);
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "Failed to register new user" });
             }
 
-            _logger.LogInformation("{Prefix}: Successfully registered new user under username: {Username}", Prefixes.AUTH, user.UserName);
+            _logger.LogInformation("{Prefix}: Successfully registered new user under username: {Username}, Id: {UserId}", Prefixes.AUTH, user.UserName,user.Id);
             return Ok(new Response { Status = "Success", Message = "User Created Successfully" });
         }
 
@@ -74,7 +78,11 @@ namespace JCMFitnessPostgresAPI.Controllers
         {
             var userExist = await userManager.FindByNameAsync(model.UserName);
             if (userExist != null)
+            {
+                _logger.LogWarning("{Prefix}: Attempted to register an existing user", Prefixes.AUTH);
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = " User Already Exist" });
+            }
+               
 
             ApiUser user = new ApiUser
             {
@@ -85,20 +93,38 @@ namespace JCMFitnessPostgresAPI.Controllers
 
             var result = await userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
+            {
+                _logger.LogError("{Prefix}: Server encountered an error registering admin: {Username}/{UserId}", Prefixes.AUTH, user.UserName, user.Id);
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = $"{result.Errors.ToList()[0].Code}", Message = $"{result.Errors.ToList()[0].Description}" });
+            }
 
+            Rolechecker(user);
+
+            _logger.LogInformation("{Prefix}: Successfully registered new admin under username: {Username}, Id: {UserId}", Prefixes.AUTH, user.UserName, user.Id);
+            return Ok(new Response { Status = "Success", Message = "User Created Successfully" });
+        }
+
+        public async void Rolechecker(ApiUser user)
+        {
             if (!await roleManager.RoleExistsAsync(UserRoles.Admin))
+            {
+                _logger.LogWarning("{Prefix}: No {role} found, creating role...", Prefixes.ROLE, UserRoles.Admin);
                 await roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
-
+                _logger.LogInformation("{Prefix}: Created new {role}", Prefixes.ROLE, UserRoles.Admin);
+            }
+               
             if (!await roleManager.RoleExistsAsync(UserRoles.User))
+            {
+                _logger.LogWarning("{Prefix}: No {role} found, creating role...", Prefixes.ROLE, UserRoles.User);
                 await roleManager.CreateAsync(new IdentityRole(UserRoles.User));
-
+                _logger.LogInformation("{Prefix}: Created new {role}", Prefixes.ROLE, UserRoles.User);
+            }
+                
             if (await roleManager.RoleExistsAsync(UserRoles.Admin))
             {
                 await userManager.AddToRolesAsync(user, new List<string>() { UserRoles.Admin });
+                _logger.LogInformation("{Prefix}: Registered user: {Username}/{UserId} has been assigned to the {role} role", Prefixes.ROLE, user.UserName,user.Id, UserRoles.User);
             }
-
-            return Ok(new Response { Status = "Success", Message = "User Created Successfully" });
         }
 
         [HttpPost]
