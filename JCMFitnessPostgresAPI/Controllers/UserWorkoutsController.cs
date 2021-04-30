@@ -31,16 +31,16 @@ namespace JCMFitnessPostgresAPI.Controllers
         [Authorize(Roles = UserRoles.Admin)]
         public async Task<IEnumerable<UserWorkout>> GetAllUserWorkouts()
         {
-            //Logdebug for every call to this
+            _logger.LogDebug("{Prefix}: Attempted to get all User Workouts", Prefixes.USERWORK);
             return await _dataRepository.GetUserWorkoutsListAsync();
         }
 
         [HttpGet]
         public async Task<IEnumerable<Workout>> GetUserWorkouts(string userid)
         {
-            //Loginfo returning workouts for the userid {userid}
+            
             var userWorkout = await _dataRepository.GetUserWorkoutsAsync(userid);
-
+            _logger.LogDebug("{Prefix}: Attempted to get Workouts for User with Id: {Id}", Prefixes.USERWORK, userid);
             return userWorkout;
         }
 
@@ -53,10 +53,10 @@ namespace JCMFitnessPostgresAPI.Controllers
                 //Guid obj = Guid.NewGuid();
                 //user.UserID = obj.ToString("n");
                 await _dataRepository.AddUserWorkoutAsync(workout, userid);
-                //loginfo for successful addition of a workout of workoutid to userid
+                _logger.LogInformation("{Prefix}: Added association between Workout with Id: {Id} and User with Id: {Id}", Prefixes.USERWORK,workout.WorkoutID,userid);
                 return Ok();
             }
-            //Logwarning "something went wrong"
+            _logger.LogError("{Prefix}: Invalid Workout model submitted: {workout}",Prefixes.USERWORK, workout);
             return BadRequest();
         }
 
@@ -66,7 +66,7 @@ namespace JCMFitnessPostgresAPI.Controllers
         public async Task<IActionResult> DeleteUserWorkouts(string workoutid, string userid)
         {
             await _dataRepository.DeleteUserWorkoutAsync(workoutid, userid);
-            //loginfo for successful deletion of workout of id: workoutid association from userid
+            _logger.LogInformation("{Prefix}: Deleted association between Workout with Id: {Id}, and User with Id: {Id} ",Prefixes.USERWORK, workoutid,userid);
             return Ok();
         }
 
@@ -75,7 +75,7 @@ namespace JCMFitnessPostgresAPI.Controllers
         public async Task<IActionResult> DeleteUserWorkoutList(string userid)
         {
             await _dataRepository.DeleteUserWorkoutListAsync(userid);
-            //Loginfo "successfully deleted all workouts associated with userid"
+            _logger.LogInformation("{Prefix}: Deleted all associations between Workouts and User with Id: {Id}",Prefixes.USERWORK,userid);
             return Ok();
         }
 

@@ -9,6 +9,7 @@ using JCMFitnessPostgresAPI.DataAccess;
 using JCMFitnessPostgresAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using JCMFitnessPostgresAPI.Authentication;
+using Microsoft.Extensions.Logging;
 
 namespace JCMFitnessPostgresAPI.Controllers
 {
@@ -18,16 +19,19 @@ namespace JCMFitnessPostgresAPI.Controllers
     public class WorkoutsController : ControllerBase
     {
         private readonly IDataRepository _dataRepository;
+        private readonly ILogger<WorkoutsController> _logger;
 
-        public WorkoutsController(IDataRepository userRepository)
+        public WorkoutsController(IDataRepository userRepository, ILogger<WorkoutsController> logger)
         {
             _dataRepository = userRepository;
+            _logger = logger;
         }
 
         [HttpGet("getall")]
         [Authorize(Roles = UserRoles.Admin)]
         public async Task<IEnumerable<Workout>> GetAllWorkouts()
         {
+            _logger.LogDebug("{Prefix}: Attempted to get all workouts", Prefixes.WORKOUT);
             return await _dataRepository.GetWorkoutListAsync();
         }
 
@@ -42,14 +46,17 @@ namespace JCMFitnessPostgresAPI.Controllers
                 if (!_dataRepository.WorkoutExists(workout.WorkoutID))
                 {
                     await _dataRepository.AddWorkoutAsync(workout);
+                    _logger.LogInformation("{Prefix}: Added Workout with Id: {Id} to the Data Repo", Prefixes.WORKOUT, workout.WorkoutID);
                     return Ok();
                 }
                 else
                 {
+                    _logger.LogWarning("{Prefix}: Attempted to add Workout with existing Id: {Id}", Prefixes.WORKOUT, workout.WorkoutID);
                     return BadRequest("Workout already exists");
                 }
             }
-            return BadRequest("User Object is not valid");
+            _logger.LogError("{Prefix}: Invalid Workout model submitted: {workout}", Prefixes.WORKOUT, workout);
+            return BadRequest("Workout Object is not valid");
         }
 
         [HttpPut]
@@ -58,8 +65,10 @@ namespace JCMFitnessPostgresAPI.Controllers
             if (ModelState.IsValid)
             {
                 await _dataRepository.EditWorkoutAsync(workout);
+                _logger.LogInformation("{Prefix}: Edited Workout with Id: {Id}", Prefixes.WORKOUT, workout.WorkoutID);
                 return Ok();
             }
+            _logger.LogError("{Prefix}: Invalid edit submitted for: {Id}", Prefixes.WORKOUT, workout.WorkoutID);
             return BadRequest();
         }
 
@@ -69,10 +78,12 @@ namespace JCMFitnessPostgresAPI.Controllers
 
             if (_dataRepository.WorkoutExists(workoutid))
             {
+                _logger.LogDebug("{Prefix}: Attempted to get an workout with Id: {Id}", Prefixes.WORKOUT, workoutid);
                 return await _dataRepository.GetWorkoutAsync(workoutid);
             }
             else
             {
+                _logger.LogWarning("{Prefix}: Attempted to get an Id: {Id} that does not exist", Prefixes.WORKOUT, workoutid);
                 return BadRequest("Workout id does not exist");
             }
         }
@@ -85,10 +96,12 @@ namespace JCMFitnessPostgresAPI.Controllers
             if (_dataRepository.WorkoutExists(workoutid))
             {
                  await _dataRepository.DeleteWorkoutAsync(workoutid);
+                _logger.LogInformation("{Prefix}: Deleted Workout with Id: {Id}", Prefixes.WORKOUT, workoutid);
                 return Ok();
             }
             else
             {
+                _logger.LogWarning("{Prefix}: Unable to delete Workout with Id: {Id}, Id does not exist", Prefixes.WORKOUT, workoutid);
                 return BadRequest("Workout id does not exist");
             }
             

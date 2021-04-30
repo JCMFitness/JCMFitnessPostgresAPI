@@ -29,7 +29,7 @@ namespace JCMFitnessPostgresAPI.Controllers
         //[Authorize(Roles = UserRoles.Admin)]
         public async Task<IEnumerable<ApiUser>> GetAllUsers()
         {
-            //logdebug every call
+            _logger.LogDebug("{Prefix}: Attempted to get all users", Prefixes.USER);
             return await _dataRepository.GetUsersAsync();
         }
 
@@ -39,12 +39,12 @@ namespace JCMFitnessPostgresAPI.Controllers
         {
             if (_dataRepository.UserExists(userid))
             {
-                //logInfo succesfully retrived a user 
+                _logger.LogDebug("{Prefix}: Attempted to get user at Id: {Id}", Prefixes.USER, userid);
                 return await _dataRepository.GetUserAsync(userid);
             }
             else
             {
-                //logerror user doesnt exist
+                _logger.LogError("{Prefix}: Attempted to get user at Id: {Id} that does not exist", Prefixes.USER,userid);
                 return BadRequest("User id does not exist");
             }
         }
@@ -55,11 +55,12 @@ namespace JCMFitnessPostgresAPI.Controllers
         {
             if (ModelState.IsValid)
             {
-                //loginfo user edited
+                
                 await _dataRepository.EditUserAsync(user);
+                _logger.LogInformation("{Prefix}: Edited User with Id: {Id}", Prefixes.USER, user.Id);
                 return Ok();
             }
-            //logerror user edit object invalid
+            _logger.LogError("{Prefix}: Invalid edited submitted for Id: {Id}",Prefixes.USER, user.Id);
             return BadRequest("User object is not valid");
         }
 
@@ -70,11 +71,12 @@ namespace JCMFitnessPostgresAPI.Controllers
             {
                 //loginfo userid of user being deleted
                 await _dataRepository.DeleteUserAsync(userid);
+                _logger.LogInformation("{Prefix}: Deleted User with Id: {Id}", Prefixes.USER, userid);
                 return Ok();
             }
             else
             {
-                //logerror tried to delete user that doesnt exist, shouldnt ever reach this.
+                _logger.LogError("{Prefix}: Unable to delete User with Id: {Id}, Id does not exist", Prefixes.USER, userid);
                 return BadRequest("User id does not exist");
             }
 

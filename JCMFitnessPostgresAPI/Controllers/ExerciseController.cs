@@ -26,7 +26,7 @@ namespace JCMFitnessPostgresAPI.Controllers
         [HttpGet("getall")]
         public async Task<IEnumerable<Exercise>> GetAllExercises()
         {
-            //logdebug for every call
+            _logger.LogDebug("{Prefix}: Attempted to get all exercises",Prefixes.EXER);
             return await _dataRepository.GetExerciseListAsync();
         }
 
@@ -40,17 +40,18 @@ namespace JCMFitnessPostgresAPI.Controllers
                 //user.UserID = obj.ToString("n");
                 if (!_dataRepository.ExerciseExists(exercise.ExerciseID))
                 {
-                    //Add exercise if datarepo doesnt contain exercise
+                    
                     await _dataRepository.AddExerciseAsync(exercise);
+                    _logger.LogInformation("{Prefix}: Added Exercise with Id: {Id} to the Data Repo", Prefixes.EXER, exercise.ExerciseID);
                     return Ok();
                 }
                 else
                 {
-                    //logwarning because exercise exists
+                    _logger.LogWarning("{Prefix}: Attempted to add with existing Id: {Id}", Prefixes.EXER,exercise.ExerciseID);
                     return BadRequest("Exercise already exists");
                 }
             }
-            //Logerror because exercise object is invalid
+            _logger.LogError("{Prefix}: Invalid exercise model submitted: {exercise}", Prefixes.EXER, exercise);
             return BadRequest("Workout Object is not valid");
         }
 
@@ -59,11 +60,12 @@ namespace JCMFitnessPostgresAPI.Controllers
         {
             if (ModelState.IsValid)
             {
-                //loginfo exercise with id {id} edited
+                
                 await _dataRepository.EditExerciseAsync(exercise);
+                _logger.LogInformation("{Prefix}: Edited Exercise with Id: {Id}", Prefixes.EXER, exercise.ExerciseID);
                 return Ok();
             }
-            //logerror edit failed for exercise
+            _logger.LogError("{Prefix}: Invalid edit submitted for: {Id}", Prefixes.EXER, exercise.ExerciseID);
             return BadRequest();
         }
 
@@ -73,12 +75,12 @@ namespace JCMFitnessPostgresAPI.Controllers
 
             if (_dataRepository.ExerciseExists(exerciseid))
             {
-                //Loginfo exercise returned from existing 
+                _logger.LogDebug("{Prefix}: Attempted to get an exercise with Id: {Id}",Prefixes.EXER, exerciseid);
                 return await _dataRepository.GetExerciseAsync(exerciseid);
             }
             else
             {
-                //logwarning attempted to return an exercise that doesnt exist
+                _logger.LogWarning("{Prefix}: Attempted to get an Id: {Id} that does not exist",Prefixes.EXER,exerciseid);
                 return BadRequest("Exercise id does not exist");
             }
         }
@@ -89,13 +91,14 @@ namespace JCMFitnessPostgresAPI.Controllers
         public async Task<IActionResult> DeleteExercise(string exerciseid)
         {
             if (_dataRepository.ExerciseExists(exerciseid))
-            {   //loginfo deleted an exercise 
+            {  
                 await _dataRepository.DeleteExerciseAsync(exerciseid);
+                _logger.LogInformation("{Prefix}: Deleted Exercise with Id: {Id}", Prefixes.EXER, exerciseid);
                 return Ok();
             }
             else
             {
-                //logwarning attempted to delete an exercise that doesnt exist
+                _logger.LogWarning("{Prefix}: Unable to delete exercise with Id: {Id}, Id does not exist", Prefixes.EXER, exerciseid);
                 return BadRequest("Exercise id does not exist");
             }
 
