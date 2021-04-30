@@ -81,5 +81,11 @@ namespace JCMFitnessPostgresAPI.Controllers
             }
 
         }
+
+        [HttpPost("sync")]
+        public async Task SyncUser(ApiUser user)
+        {
+            await _dataRepository.SyncUserAsync(user);
+        }
     }
 }

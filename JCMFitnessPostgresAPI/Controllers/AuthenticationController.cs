@@ -1,4 +1,5 @@
 ﻿using JCMFitnessPostgresAPI.Authentication;
+using JCMFitnessPostgresAPI.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -58,8 +59,10 @@ namespace JCMFitnessPostgresAPI.Controllers
                 FirstName = model.FirstName,
                 SecurityStamp = Guid.NewGuid().ToString(),
                 UserName = model.UserName
-                
             };
+
+            user.LastUpdated = DateTimeWithZone.LocalTime(DateTime.Now);
+            user.IsDeleted = false;
 
             var result = await userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
@@ -90,6 +93,9 @@ namespace JCMFitnessPostgresAPI.Controllers
                 SecurityStamp = Guid.NewGuid().ToString(),
                 UserName = model.UserName
             };
+
+            user.LastUpdated = DateTimeWithZone.LocalTime(DateTime.Now);
+            user.IsDeleted = false;
 
             var result = await userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)

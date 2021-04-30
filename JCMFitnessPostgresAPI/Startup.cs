@@ -38,9 +38,12 @@ namespace JCMFitnessPostgresAPI
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers();
 
-            services.AddDbContext<ApiDBContext>(options => options.UseNpgsql(convertUrlConnectionString(Configuration["AZURE_DATABASE_URL"])));
+            services.AddControllers()
+            .AddNewtonsoftJson(options =>
+            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+            services.AddDbContext<ApiDBContext>(options => options.UseNpgsql(convertUrlConnectionString(Configuration["HEROKU_DATABASE_URL"])));
 
             //services.AddDbContext<ApiUserDbContext>(options => options.UseNpgsql(convertUrlConnectionString(Configuration["IdentityConnection"])));
 

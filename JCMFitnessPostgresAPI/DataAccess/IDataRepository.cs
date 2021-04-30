@@ -17,6 +17,7 @@ namespace JCMFitnessPostgresAPI.DataAccess
         public Task EditWorkoutAsync(Workout workout);
         public Task DeleteWorkoutAsync(string id);
         public bool WorkoutExists(string workoutID);
+        public Task SyncWorkoutsAsync(string userID, List<Workout> workouts);
 
         //User
         public Task<IEnumerable<ApiUser>> GetUsersAsync();
@@ -24,9 +25,9 @@ namespace JCMFitnessPostgresAPI.DataAccess
         public Task<ApiUser> GetUserAsync(string id);
         public Task EditUserAsync(ApiUser user);
         public Task DeleteUserAsync(string id);
-
         public bool UserExists(string userID);
-      
+        public Task SyncUserAsync(ApiUser user);
+
 
 
         //UserWorkout
@@ -45,6 +46,7 @@ namespace JCMFitnessPostgresAPI.DataAccess
         public Task EditExerciseAsync(Exercise exercise);
         public Task DeleteExerciseAsync(string exerciseID);
         public bool ExerciseExists(string exerciseID);
+        public Task SyncExercisesAsync(string workoutID, List<Exercise> exercises);
 
         //WorkoutExercises
         public Task<IEnumerable<WorkoutExercises>> GetWorkoutExerciseListAsync();

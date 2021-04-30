@@ -28,7 +28,7 @@ namespace JCMFitnessPostgresAPI.Controllers
 
 
         [HttpGet("getall")]
-        [Authorize(Roles = UserRoles.Admin)]
+        //[Authorize(Roles = UserRoles.Admin)]
         public async Task<IEnumerable<UserWorkout>> GetAllUserWorkouts()
         {
             _logger.LogDebug("{Prefix}: Attempted to get all User Workouts", Prefixes.USERWORK);
@@ -77,6 +77,12 @@ namespace JCMFitnessPostgresAPI.Controllers
             await _dataRepository.DeleteUserWorkoutListAsync(userid);
             _logger.LogInformation("{Prefix}: Deleted all associations between Workouts and User with Id: {Id}",Prefixes.USERWORK,userid);
             return Ok();
+        }
+
+        [HttpPost("sync")]
+        public async Task SyncAllWorkouts(string userid, List<Workout> workouts)
+        {
+            await _dataRepository.SyncWorkoutsAsync(userid, workouts);
         }
 
     }

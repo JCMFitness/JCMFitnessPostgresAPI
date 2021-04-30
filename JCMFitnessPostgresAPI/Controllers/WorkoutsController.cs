@@ -28,7 +28,7 @@ namespace JCMFitnessPostgresAPI.Controllers
         }
 
         [HttpGet("getall")]
-        [Authorize(Roles = UserRoles.Admin)]
+        //[Authorize(Roles = UserRoles.Admin)]
         public async Task<IEnumerable<Workout>> GetAllWorkouts()
         {
             _logger.LogDebug("{Prefix}: Attempted to get all workouts", Prefixes.WORKOUT);
@@ -106,6 +106,8 @@ namespace JCMFitnessPostgresAPI.Controllers
             }
             
         }
+
+      
 
     }
 }
