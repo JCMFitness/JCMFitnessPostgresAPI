@@ -104,13 +104,13 @@ namespace JCMFitnessPostgresAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = $"{result.Errors.ToList()[0].Code}", Message = $"{result.Errors.ToList()[0].Description}" });
             }
 
-            Rolechecker(user);
+            rolechecker(user);
 
             _logger.LogInformation("{Prefix}: Successfully registered new admin under username: {Username}, Id: {UserId}", Prefixes.AUTH, user.UserName, user.Id);
             return Ok(new Response { Status = "Success", Message = "User Created Successfully" });
         }
 
-        public async void Rolechecker(ApiUser user)
+        private async void rolechecker(ApiUser user)
         {
             if (!await roleManager.RoleExistsAsync(UserRoles.Admin))
             {

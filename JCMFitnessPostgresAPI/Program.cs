@@ -20,25 +20,13 @@ namespace JCMFitnessPostgresAPI
     {
         public static void Main(string[] args)
         {
-            /* var config = new ConfigurationBuilder()
-                       .AddJsonFile("appsettings.json")
-                       .Build();
-
-             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-
-
-             Log.Logger = new LoggerConfiguration()
-                 .Enrich.FromLogContext()
-                 .WriteTo.Elasticsearch(ConfigureElasticSink(config, environment))
-                 .MinimumLevel.Information()
-                 .Enrich.WithProperty("Environment", environment)
-                 .ReadFrom.Configuration(config)
-                 .CreateLogger();*/
+            var config = new ConfigurationBuilder()
+                      .AddJsonFile("appsettings.json")
+                      .Build();
 
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Information()
-                        .WriteTo.Console()
-                            .CreateLogger();
+                .ReadFrom.Configuration(config)
+                .CreateLogger();
 
             try
             {
@@ -68,16 +56,6 @@ namespace JCMFitnessPostgresAPI
         }
 
 
-        private static ElasticsearchSinkOptions ConfigureElasticSink(IConfigurationRoot configuration, string environment)
-        {
-            var option = new ElasticsearchSinkOptions(new Uri("http://localhost:9200"))
-            {
-                AutoRegisterTemplate = true,
-                IndexFormat = $"{Assembly.GetExecutingAssembly().GetName().Name.ToLower().Replace(".", "-")}-{environment?.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyy-MM}"
-            };
-
-            return option;
-        }
 
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
